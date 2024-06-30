@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_nav"
+    app:startDestination="@id/accountFragment">
+
+    <fragment
+        android:id="@+id/accountFragment"
+        android:name="com.example.testoviy_dating.bottomfragments.AccountFragment"
+        android:label="fragment_account"
+        tools:layout="@layout/fragment_account" />
+    <fragment
+        android:id="@+id/recommendationFragment"
+        android:name="com.example.testoviy_dating.bottomfragments.RecommendationFragment"
+        android:label="fragment_recommendation"
+        tools:layout="@layout/fragment_recommendation" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.testoviy_dating.bottomfragments.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/gandonFragment"
+        android:name="com.example.testoviy_dating.fragments.GandonFragment"
+        android:label="fragment_gandon"
+        tools:layout="@layout/fragment_gandon" />
+    <fragment
+        android:id="@+id/questionsFragment"
+        android:name="com.example.testoviy_dating.childfragments.QuestionsFragment"
+        android:label="fragment_questions"
+        tools:layout="@layout/fragment_questions" />
+    <fragment
+        android:id="@+id/girlsResponseFragment"
+        android:name="com.example.testoviy_dating.childfragments.GirlsResponseFragment"
+        android:label="fragment_girls_response"
+        tools:layout="@layout/fragment_girls_response" />
+    <fragment
+        android:id="@+id/boysQuestionsFragment"
+        android:name="com.example.testoviy_dating.childfragments.BoysQuestionsFragment"
+        android:label="fragment_boys_questions"
+        tools:layout="@layout/fragment_boys_questions" />
+    <fragment
+        android:id="@+id/boysResponseFragment"
+        android:name="com.example.testoviy_dating.childfragments.BoysResponseFragment"
+        android:label="fragment_boys_response"
+        tools:layout="@layout/fragment_boys_response" />
+</navigation>

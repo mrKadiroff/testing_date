@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "868631169258",
+    "project_id": "testoviy-db612",
+    "storage_bucket": "testoviy-db612.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:868631169258:android:10ee9c61e15e192e022f93",
+        "android_client_info": {
+          "package_name": "com.example.testoviy_dating"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUqcZ7d2ghM_8pSTVvUCnjg2E9D_LBZQg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
