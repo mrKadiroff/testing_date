@@ -1,5 +1,7 @@
 package com.example.testoviy_dating.adapter
 
+import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -20,14 +22,14 @@ class RegistrationAdapter(
         RecyclerView.ViewHolder(itemUserBinding.root) {
 
 
+        @SuppressLint("SuspiciousIndentation")
         fun onBind(malumot: Registration) {
 
 
             itemUserBinding.namecha.text = malumot.Name
             itemUserBinding.surnamecha.text = malumot.Surname
 
-            if (girsResponse[adapterPosition].Password == malumot.Password){
-                itemUserBinding.gender.text = girsResponse[adapterPosition].First
+
 
                 //boys expectaions
                 firebaseFirestore.collection("boys_expectation")
@@ -42,8 +44,7 @@ class RegistrationAdapter(
 
                                 if (boysExpecattions.Password == password){
                                     //it here is the user's expectations information
-                                    val girlResponse = girsResponse[adapterPosition]
-                                    val matchPercentage = calculateMatchPercentage(boysExpecattions, girlResponse)
+                                    val matchPercentage = calculateMatchPercentage(boysExpecattions, girsResponse[adapterPosition])
                                     itemUserBinding.gender.text = "$matchPercentage% match"
                                 }
 
@@ -57,7 +58,7 @@ class RegistrationAdapter(
 
 
 
-            }
+
 
 
 
