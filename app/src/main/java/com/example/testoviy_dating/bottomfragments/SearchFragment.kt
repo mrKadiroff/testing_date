@@ -66,7 +66,6 @@ class SearchFragment : Fragment() {
     }
 
     private fun fetchDataforBoys() {
-        var usersGirlsAdapter:UsersGirlsAdapter
         list2 = ArrayList()
         firebaseFirestore.collection("girl_reg")
             .get()
@@ -74,38 +73,15 @@ class SearchFragment : Fragment() {
                 if (task.isSuccessful) {
                     val result = task.result
                     result?.forEach { queryDocumentSnapshot ->
-                        // Log the raw document data
-                        Log.d("FirestoreData", "Document data: ${queryDocumentSnapshot.data}")
 
                         // Convert document to BoysReg object
                         val girlReg = queryDocumentSnapshot.toObject(GirlsReg::class.java)
 
-                        Log.d("FirestoreData", "GirlsExpectation: ${girlReg.GirlsExpectation}")
-                        Log.d("FirestoreData", "GIrlsResponse: ${girlReg.GirlsResponse}")
 
-
-                        list2.add(girlReg)
-                        usersGirlsAdapter = UsersGirlsAdapter(list2,object :UsersGirlsAdapter.OnItremClickListener{
-                            override fun onItemClick(malumotlar: GirlsReg) {
-
-                            }
-
-
-                        })
-
-                        binding.rv.adapter = usersGirlsAdapter
                     }
-                } else {
-                    Log.e("FirestoreError", "Error getting documents.", task.exception)
-                    Toast.makeText(binding.root.context, "Error getting documents.", Toast.LENGTH_SHORT).show()
                 }
             }
 
-        binding.check.setOnClickListener {
-            if (list.isNotEmpty()) {
-                Toast.makeText(binding.root.context, list[0].BoysQuest?.First, Toast.LENGTH_SHORT).show()
-            }
-        }
 
 
 

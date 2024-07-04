@@ -1,18 +1,17 @@
 package com.example.testoviy_dating.bottomfragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.testoviy_dating.BottomActivity
-import com.example.testoviy_dating.adapter.RegistrationAdapter
-import com.example.testoviy_dating.adapter.RegistrationAdapter2
 import com.example.testoviy_dating.databinding.FragmentRecommendationBinding
-import com.example.testoviy_dating.models.GirlsExpectation
-import com.example.testoviy_dating.models.GirlsResponse
-import com.example.testoviy_dating.models.Registration
+import com.example.testoviy_dating.newadapters.UsersGirlsAdapter
+import com.example.testoviy_dating.newreg.BoysReg
+import com.example.testoviy_dating.newreg.GirlsReg
 import com.google.firebase.firestore.FirebaseFirestore
 
 // TODO: Rename parameter arguments, choose names that match
@@ -40,11 +39,8 @@ class RecommendationFragment : Fragment() {
 
     lateinit var binding: FragmentRecommendationBinding
     lateinit var firebaseFirestore: FirebaseFirestore
-//    lateinit var adapter: RegistrationAdapter
-    lateinit var adapter2: RegistrationAdapter2
-    lateinit var list: ArrayList<Registration>
-    lateinit var list2: ArrayList<GirlsResponse>
-    lateinit var list3: ArrayList<GirlsExpectation>
+    lateinit var list: ArrayList<GirlsReg>
+    private val TAG = "RecommendationFragment"
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -58,6 +54,7 @@ class RecommendationFragment : Fragment() {
 
         if (gender == "Male"){
             setRv()
+            boyData()
         }else{
             Toast.makeText(binding.root.context, "You are fucking female", Toast.LENGTH_SHORT).show()
             setRvForGIrls()
@@ -72,125 +69,52 @@ class RecommendationFragment : Fragment() {
     }
 
     private fun setRvForGIrls() {
-        list = ArrayList()
-        list3 = ArrayList()
-        val password = (activity as? BottomActivity)?.intent?.getStringExtra("password")
-        val gender = (activity as? BottomActivity)?.intent?.getStringExtra("gender")
 
-
-        firebaseFirestore.collection("registration")
-            .get()
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    val result = it.result
-
-                    result?.forEach { queryDocumentSnapshot ->
-                        val registration = queryDocumentSnapshot.toObject(Registration::class.java)
-
-
-                        if (registration.Gender != gender){
-                            list.add(registration)
-                        }
-
-
-                        firebaseFirestore.collection("boys_response")
-                            .get()
-                            .addOnCompleteListener {
-                                if (it.isSuccessful) {
-                                    val result = it.result
-
-                                    result?.forEach { queryDocumentSnapshot ->
-                                        val boysResponse = queryDocumentSnapshot.toObject(
-                                            GirlsExpectation::class.java)
-
-                                        list3.add(boysResponse)
-
-                                        adapter2 = RegistrationAdapter2(list,firebaseFirestore,password,list3,object :RegistrationAdapter2.OnItremClickListener{
-                                            override fun onItemClick(
-                                                malumot: Registration,
-                                                matchPercentage: Int,
-                                                matchedTraits: List<String>,
-                                                unmatchedTraits: List<String>
-                                            ) {
-                                                Toast.makeText(binding.root.context, "First - ${unmatchedTraits[0]}", Toast.LENGTH_SHORT).show()
-                                            }
-
-
-                                        })
-                                        binding.rv.adapter = adapter2
-                                        adapter2.sortAndNotify()
-
-                                    }
-                                }}
-
-
-
-
-
-
-
-
-
-
-
-                    }
-                }}
     }
 
     private fun setRv() {
-        var adapter: RegistrationAdapter
+        var usersGirlsAdapter: UsersGirlsAdapter
         list = ArrayList()
-        list2 = ArrayList()
-        val password = (activity as? BottomActivity)?.intent?.getStringExtra("password")
-        val gender = (activity as? BottomActivity)?.intent?.getStringExtra("gender")
-
-
-        firebaseFirestore.collection("registration")
+        firebaseFirestore.collection("girl_reg")
             .get()
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    val result = it.result
-
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val result = task.result
                     result?.forEach { queryDocumentSnapshot ->
-                        val registration = queryDocumentSnapshot.toObject(Registration::class.java)
+
+                        val girlReg = queryDocumentSnapshot.toObject(GirlsReg::class.java)
+                        list.add(girlReg)
+                        boyData()
 
 
-                        if (registration.Gender != gender){
-                            list.add(registration)
-                        }
-
-
-                        firebaseFirestore.collection("girls_response")
+                        firebaseFirestore.collection("boy_reg")
                             .get()
-                            .addOnCompleteListener {
-                                if (it.isSuccessful) {
-                                    val result = it.result
-
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    val result = task.result
                                     result?.forEach { queryDocumentSnapshot ->
-                                        val girsResponse = queryDocumentSnapshot.toObject(
-                                            GirlsResponse::class.java)
 
-                                        list2.add(girsResponse)
+                                        // Convert document to BoysReg object
+                                        val boyReg = queryDocumentSnapshot.toObject(BoysReg::class.java)
 
-                                        adapter = RegistrationAdapter(list,firebaseFirestore,password,list2,object :RegistrationAdapter.OnItremClickListener{
-                                            override fun onItemClick(
-                                                malumot: Registration,
-                                                matchPercentage: Int,
-                                                matchedTraits: List<String>,
-                                                unmatchedTraits: List<String>
-                                            ) {
-                                                Toast.makeText(binding.root.context, "First - ${matchedTraits[0]}", Toast.LENGTH_SHORT).show()
+
+
+                                        usersGirlsAdapter = UsersGirlsAdapter(list,boyReg,object : UsersGirlsAdapter.OnItremClickListener{
+                                            override fun onItemClick(malumotlar: GirlsReg) {
+
                                             }
 
 
                                         })
-                                        binding.rv.adapter = adapter
-                                        adapter.sortAndNotify()
+
+                                        binding.rv.adapter = usersGirlsAdapter
+
+
+
 
                                     }
-                                }}
-
-
+                                }
+                            }
 
 
 
@@ -201,8 +125,35 @@ class RecommendationFragment : Fragment() {
 
 
                     }
-                }}
+                } else {
+                    Log.e("FirestoreError", "Error getting documents.", task.exception)
+                    Toast.makeText(binding.root.context, "Error getting documents.", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+
+
     }
+
+    private fun boyData() {
+        firebaseFirestore.collection("boy_reg")
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val result = task.result
+                    result?.forEach { queryDocumentSnapshot ->
+
+                        // Convert document to BoysReg object
+                        val girlReg = queryDocumentSnapshot.toObject(BoysReg::class.java)
+                        Log.d(TAG, "boyData: ${girlReg.BoysExpectation!!.First} va ${girlReg.BoysResponse!!.First}")
+
+                    }
+                }
+            }
+
+
+    }
+
 
     companion object {
         /**

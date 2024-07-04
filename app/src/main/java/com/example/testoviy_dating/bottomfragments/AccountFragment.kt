@@ -53,22 +53,34 @@ class AccountFragment : Fragment() {
 
 //        setUi()
 
-//
-//        val regInformation = (activity as? BottomActivity)?.intent?.getSerializableExtra("reg") as Registration
-//        binding.questions.setOnClickListener {
-//            Toast.makeText(binding.root.context, regInformation.Name, Toast.LENGTH_SHORT).show()
-//
-//
-//                if (regInformation.Gender == "Female"){
-//                    findNavController().navigate(R.id.questionsFragment)
-//                }else{
-//                    findNavController().navigate(R.id.boysQuestionsFragment)
-//                }
-//
-//
-//
-//        }
 
+
+
+        val check = (activity as? BottomActivity)?.intent?.getStringExtra("log")
+
+
+        if (check == "registration"){
+            //
+        val regInformation = (activity as? BottomActivity)?.intent?.getSerializableExtra("reg") as Registration
+        binding.questions.setOnClickListener {
+            Toast.makeText(binding.root.context, regInformation.Name, Toast.LENGTH_SHORT).show()
+
+
+                if (regInformation.Gender == "Female"){
+                    findNavController().navigate(R.id.questionsFragment)
+                }else{
+                    findNavController().navigate(R.id.boysQuestionsFragment)
+                }
+
+
+
+        }
+        }else{
+            val password = (activity as? BottomActivity)?.intent?.getStringExtra("gender")
+            binding.questions.setOnClickListener {
+                Toast.makeText(binding.root.context, password, Toast.LENGTH_SHORT).show()
+            }
+        }
 
 
 

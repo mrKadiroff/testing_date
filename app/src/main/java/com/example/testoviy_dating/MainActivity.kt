@@ -40,9 +40,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun login() {
         binding.next.setOnClickListener {
-            val intent = Intent(this, BottomActivity::class.java)
-            intent.putExtra("reg","registration")
-            startActivity(intent)
+           ShowDialgue()
         }
     }
 
@@ -70,35 +68,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun passwordChecking(namecha: String, password: String) {
-        list = ArrayList()
-
-        firebaseFirestore.collection("registration")
-            .get()
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    val result = it.result
-
-                    result?.forEach { queryDocumentSnapshot ->
-                        val registration = queryDocumentSnapshot.toObject(Registration::class.java)
 
 
-                        if (registration.Password == password){
-                            Toast.makeText(binding.root.context, "Bunday foydalanuvchi bor", Toast.LENGTH_SHORT)
-                                .show()
+
+
                             val intent = Intent(this, BottomActivity::class.java)
-                            intent.putExtra("password",registration.Password)
-                            intent.putExtra("gender",registration.Gender)
+                            intent.putExtra("password",password)
+                            intent.putExtra("gender",namecha)
                             startActivity(intent)
-                        }
-
-
-
-                    }
-                }}
-
-
-
-
 
 
     }
@@ -119,6 +96,7 @@ class MainActivity : AppCompatActivity() {
 
 
                 val intent = Intent(this, BottomActivity::class.java)
+                intent.putExtra("log","registration")
                 intent.putExtra("reg",registration)
                 startActivity(intent)
 
