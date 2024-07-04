@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.testoviy_dating.BottomActivity
 import com.example.testoviy_dating.databinding.FragmentRecommendationBinding
+import com.example.testoviy_dating.newadapters.UsersBoysAdapter
 import com.example.testoviy_dating.newadapters.UsersGirlsAdapter
 import com.example.testoviy_dating.newreg.BoysReg
 import com.example.testoviy_dating.newreg.GirlsReg
@@ -28,6 +29,7 @@ class RecommendationFragment : Fragment() {
     lateinit var binding: FragmentRecommendationBinding
     lateinit var firebaseFirestore: FirebaseFirestore
     lateinit var list: ArrayList<GirlsReg>
+    lateinit var list2: ArrayList<BoysReg>
     private val TAG = "RecommendationFragment"
 
     override fun onCreateView(
@@ -50,6 +52,55 @@ class RecommendationFragment : Fragment() {
         return binding.root
     }
 
+    private fun setRvForGirls() {
+        // Implement if needed
+        var adapter : UsersBoysAdapter
+        list2 = ArrayList()
+        firebaseFirestore.collection("girl_reg")
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val result = task.result
+                    result?.forEach { queryDocumentSnapshot ->
+                        // Log the raw document data
+                        Log.d("FirestoreData", "Document data: ${queryDocumentSnapshot.data}")
+
+                        // Convert document to BoysReg object
+                        val passowrd = (activity as? BottomActivity)?.intent?.getStringExtra("password")
+                        val girlReg = queryDocumentSnapshot.toObject(GirlsReg::class.java)
+
+                        if (girlReg.Password == passowrd){
+                            fetchDataFromFirebaseforGirls { boysList ->
+                                val usersBoysAdapter = UsersBoysAdapter(boysList, girlReg, object : UsersBoysAdapter.OnItremClickListener {
+                                    override fun onItemClick(malumotlar: BoysReg) {
+
+                                    }
+
+
+                                })
+
+                              binding.rv.adapter = usersBoysAdapter
+                            }
+                        }
+
+
+                    }
+                } else {
+                    Log.e("FirestoreError", "Error getting documents.", task.exception)
+                    Toast.makeText(binding.root.context, "Error getting documents.", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+
+
+
+
+    }
+
+
+
+
+
     private fun setEmptyRv() {
         list = ArrayList()
         firebaseFirestore.collection("boy_reg")
@@ -65,9 +116,13 @@ class RecommendationFragment : Fragment() {
                         if (boyReg.Password == passowrd){
                             fetchDataFromFirebase { girlsList ->
                                 val usersGirlsAdapter = UsersGirlsAdapter(girlsList, boyReg, object : UsersGirlsAdapter.OnItremClickListener {
-                                    override fun onItemClick(malumotlar: GirlsReg) {
-                                        // Handle item click
+                                    override fun onItemClick(
+                                        malumotlar: GirlsReg,
+                                        percentage: Int
+                                    ) {
+                                        Toast.makeText(binding.root.context, percentage.toString(), Toast.LENGTH_SHORT).show()
                                     }
+
                                 })
 
                                 binding.rv.adapter = usersGirlsAdapter
@@ -81,9 +136,6 @@ class RecommendationFragment : Fragment() {
             }
     }
 
-    private fun setRvForGirls() {
-        // Implement if needed
-    }
 
     private fun fetchDataFromFirebase(callback: (List<GirlsReg>) -> Unit) {
         val girlsList = ArrayList<GirlsReg>()
@@ -98,6 +150,25 @@ class RecommendationFragment : Fragment() {
                         girlsList.add(girlReg)
                     }
                     callback(girlsList) // Call the callback after fetching all data
+                }
+            }
+    }
+
+
+
+    private fun fetchDataFromFirebaseforGirls(callback: (List<BoysReg>) -> Unit) {
+        val boysList = ArrayList<BoysReg>()
+
+        firebaseFirestore.collection("boy_reg")
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val result = task.result
+                    result?.forEach { queryDocumentSnapshot ->
+                        val girlReg = queryDocumentSnapshot.toObject(BoysReg::class.java)
+                        boysList.add(girlReg)
+                    }
+                    callback(boysList) // Call the callback after fetching all data
                 }
             }
     }
