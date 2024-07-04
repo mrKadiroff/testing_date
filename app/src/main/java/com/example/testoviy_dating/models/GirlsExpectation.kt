@@ -4,7 +4,6 @@ import java.io.Serializable
 
 class GirlsExpectation :Serializable{
 
-    var Password: String? = null
     var First: String? = null
     var Second: String? = null
     var Third: String? = null
@@ -22,7 +21,6 @@ class GirlsExpectation :Serializable{
 
 
     constructor(
-        Password: String?,
         First: String?,
         Second: String?,
         Third: String?,
@@ -38,7 +36,6 @@ class GirlsExpectation :Serializable{
         Thirteenth: String?,
         Fourteenth: String?
     ) {
-        this.Password = Password
         this.First = First
         this.Second = Second
         this.Third = Third
@@ -54,4 +51,8 @@ class GirlsExpectation :Serializable{
         this.Thirteenth = Thirteenth
         this.Fourteenth = Fourteenth
     }
+
+    constructor()
+
+
 }

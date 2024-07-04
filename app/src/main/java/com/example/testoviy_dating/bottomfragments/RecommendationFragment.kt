@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.testoviy_dating.BottomActivity
 import com.example.testoviy_dating.adapter.RegistrationAdapter
+import com.example.testoviy_dating.adapter.RegistrationAdapter2
 import com.example.testoviy_dating.databinding.FragmentRecommendationBinding
+import com.example.testoviy_dating.models.GirlsExpectation
 import com.example.testoviy_dating.models.GirlsResponse
 import com.example.testoviy_dating.models.Registration
 import com.google.firebase.firestore.FirebaseFirestore
@@ -38,9 +40,11 @@ class RecommendationFragment : Fragment() {
 
     lateinit var binding: FragmentRecommendationBinding
     lateinit var firebaseFirestore: FirebaseFirestore
-    lateinit var adapter: RegistrationAdapter
+//    lateinit var adapter: RegistrationAdapter
+    lateinit var adapter2: RegistrationAdapter2
     lateinit var list: ArrayList<Registration>
     lateinit var list2: ArrayList<GirlsResponse>
+    lateinit var list3: ArrayList<GirlsExpectation>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,16 +53,92 @@ class RecommendationFragment : Fragment() {
         binding = FragmentRecommendationBinding.inflate(layoutInflater,container,false)
         firebaseFirestore = FirebaseFirestore.getInstance()
 
-        setRv()
-        binding.sort.setOnClickListener {
-            adapter.sortAndNotify()
+
+        val gender = (activity as? BottomActivity)?.intent?.getStringExtra("gender")
+
+        if (gender == "Male"){
+            setRv()
+        }else{
+            Toast.makeText(binding.root.context, "You are fucking female", Toast.LENGTH_SHORT).show()
+            setRvForGIrls()
         }
+        
+        
+       
+       
 
 
         return binding.root
     }
 
+    private fun setRvForGIrls() {
+        list = ArrayList()
+        list3 = ArrayList()
+        val password = (activity as? BottomActivity)?.intent?.getStringExtra("password")
+        val gender = (activity as? BottomActivity)?.intent?.getStringExtra("gender")
+
+
+        firebaseFirestore.collection("registration")
+            .get()
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    val result = it.result
+
+                    result?.forEach { queryDocumentSnapshot ->
+                        val registration = queryDocumentSnapshot.toObject(Registration::class.java)
+
+
+                        if (registration.Gender != gender){
+                            list.add(registration)
+                        }
+
+
+                        firebaseFirestore.collection("boys_response")
+                            .get()
+                            .addOnCompleteListener {
+                                if (it.isSuccessful) {
+                                    val result = it.result
+
+                                    result?.forEach { queryDocumentSnapshot ->
+                                        val boysResponse = queryDocumentSnapshot.toObject(
+                                            GirlsExpectation::class.java)
+
+                                        list3.add(boysResponse)
+
+                                        adapter2 = RegistrationAdapter2(list,firebaseFirestore,password,list3,object :RegistrationAdapter2.OnItremClickListener{
+                                            override fun onItemClick(
+                                                malumot: Registration,
+                                                matchPercentage: Int,
+                                                matchedTraits: List<String>,
+                                                unmatchedTraits: List<String>
+                                            ) {
+                                                Toast.makeText(binding.root.context, "First - ${unmatchedTraits[0]}", Toast.LENGTH_SHORT).show()
+                                            }
+
+
+                                        })
+                                        binding.rv.adapter = adapter2
+                                        adapter2.sortAndNotify()
+
+                                    }
+                                }}
+
+
+
+
+
+
+
+
+
+
+
+                    }
+                }}
+    }
+
     private fun setRv() {
+        var adapter: RegistrationAdapter
         list = ArrayList()
         list2 = ArrayList()
         val password = (activity as? BottomActivity)?.intent?.getStringExtra("password")

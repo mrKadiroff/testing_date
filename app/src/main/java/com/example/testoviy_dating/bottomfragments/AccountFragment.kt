@@ -51,7 +51,23 @@ class AccountFragment : Fragment() {
 
 
 
-        setUi()
+//        setUi()
+
+//
+//        val regInformation = (activity as? BottomActivity)?.intent?.getSerializableExtra("reg") as Registration
+//        binding.questions.setOnClickListener {
+//            Toast.makeText(binding.root.context, regInformation.Name, Toast.LENGTH_SHORT).show()
+//
+//
+//                if (regInformation.Gender == "Female"){
+//                    findNavController().navigate(R.id.questionsFragment)
+//                }else{
+//                    findNavController().navigate(R.id.boysQuestionsFragment)
+//                }
+//
+//
+//
+//        }
 
 
 

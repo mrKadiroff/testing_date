@@ -18,9 +18,12 @@ import com.example.testoviy_dating.adapter.TraitsAdapter
 import com.example.testoviy_dating.databinding.FragmentGirlsResponseBinding
 import com.example.testoviy_dating.databinding.FragmentQuestionsBinding
 import com.example.testoviy_dating.models.BoysTraits
+import com.example.testoviy_dating.models.GirlsExpectation
 import com.example.testoviy_dating.models.GirlsResponse
 import com.example.testoviy_dating.models.GirlsTraits
 import com.example.testoviy_dating.models.Question
+import com.example.testoviy_dating.models.Registration
+import com.example.testoviy_dating.newreg.GirlsReg
 import com.google.firebase.firestore.FirebaseFirestore
 
 // TODO: Rename parameter arguments, choose names that match
@@ -145,13 +148,24 @@ class GirlsResponseFragment : Fragment() {
     ) {
         val password = (activity as? BottomActivity)?.intent?.getStringExtra("password")
 
-        val girlsResponse = GirlsResponse(password,results[0],results[1],results[2],results[3],results[4],results[5],
+
+        val bundle = arguments
+        val girlsExpectations = bundle?.getSerializable("g_exp") as GirlsExpectation?
+        val regInformation = (activity as? BottomActivity)?.intent?.getSerializableExtra("reg") as Registration
+
+
+
+        val girlsResponse = GirlsResponse(results[0],results[1],results[2],results[3],results[4],results[5],
             results[6],results[7],selectedTraits[0].name,selectedTraits[1].name,selectedTraits[2].name,selectedTraits[3].name,selectedTraits[4].name,
             selectedInterests[0].name,selectedInterests[1].name,selectedInterests[2].name)
 
 
-        firebaseFirestore.collection("girls_response")
-            .add(girlsResponse)
+        var girlsReg = GirlsReg(regInformation.Name,regInformation.Surname,regInformation.Age,regInformation.Gender,regInformation.Password,regInformation.RecoveryAccount,
+            girlsExpectations,girlsResponse)
+
+
+        firebaseFirestore.collection("girl_reg")
+            .add(girlsReg)
             .addOnSuccessListener {
                 Toast.makeText(
                     binding.root.context,

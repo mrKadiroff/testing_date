@@ -5,7 +5,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.recyclerview.widget.RecyclerView
 import com.example.testoviy_dating.R
+import com.example.testoviy_dating.adapter.QuestionsAdapter
+import com.example.testoviy_dating.adapter.RegistrationAdapter2
+import com.example.testoviy_dating.databinding.FragmentAboutBinding
+import com.example.testoviy_dating.databinding.FragmentQuestionsBinding
+import com.example.testoviy_dating.models.GirlsExpectation
+import com.example.testoviy_dating.models.Registration
+import com.example.testoviy_dating.newadapters.UsersAdapter
+import com.example.testoviy_dating.newreg.BoysReg
+import com.google.firebase.firestore.FirebaseFirestore
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -30,13 +41,25 @@ class AboutFragment : Fragment() {
         }
     }
 
+    lateinit var binding: FragmentAboutBinding
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: UsersAdapter
+    lateinit var firebaseFirestore: FirebaseFirestore
+    lateinit var list: ArrayList<BoysReg>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_about, container, false)
+        binding = FragmentAboutBinding.inflate(layoutInflater,container,false)
+        firebaseFirestore = FirebaseFirestore.getInstance()
+
+
+
+        return binding.root
     }
+
+
 
     companion object {
         /**

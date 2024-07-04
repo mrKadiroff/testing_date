@@ -1,7 +1,6 @@
 package com.example.testoviy_dating.adapter
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -11,13 +10,13 @@ import com.example.testoviy_dating.models.GirlsResponse
 import com.example.testoviy_dating.models.Registration
 import com.google.firebase.firestore.FirebaseFirestore
 
-class RegistrationAdapter(
+class RegistrationAdapter2(
     var list: List<Registration>,
     var firebaseFirestore: FirebaseFirestore,
     var password: String?,
-    var girsResponse: ArrayList<GirlsResponse>,
+    var boysResponse: ArrayList<GirlsExpectation>,
     var onItremClickListener: OnItremClickListener
-) : RecyclerView.Adapter<RegistrationAdapter.Vh>() {
+) : RecyclerView.Adapter<RegistrationAdapter2.Vh>() {
 
     private var sortedResponses: List<Triple<Int, Registration, Pair<List<String>, List<String>>>> = emptyList()
 
@@ -56,29 +55,12 @@ class RegistrationAdapter(
             val matchedTraits = mutableListOf<String>()
             val unmatchedTraits = mutableListOf<String>()
 
-            // Check the first eight attributes directly
-            for (i in 0..7) {
+            for (i in boyAttributes.indices) {
                 if (boyAttributes[i]?.equals(girlAttributes[i], ignoreCase = true) == true) {
                     matches++
-                    matchedTraits.add("Expectation ${i + 1}: ${boyAttributes[i]}")
+                    matchedTraits.add(boyAttributes[i] ?: "")
                 } else {
-                    unmatchedTraits.add("Expectation ${i + 1}: ${boyAttributes[i]}")
-                }
-            }
-
-            // Check the last eight attributes against all girl attributes from 9 to 16
-            for (i in 8..15) {
-                var matched = false
-                for (j in 8..15) {
-                    if (boyAttributes[i]?.equals(girlAttributes[j], ignoreCase = true) == true) {
-                        matches++
-                        matchedTraits.add("Expectation ${i + 1}: ${boyAttributes[i]}")
-                        matched = true
-                        break
-                    }
-                }
-                if (!matched) {
-                    unmatchedTraits.add("Expectation ${i + 1}: ${boyAttributes[i]}")
+                    unmatchedTraits.add(boyAttributes[i] ?: "")
                 }
             }
 
@@ -109,18 +91,14 @@ class RegistrationAdapter(
                     val result = task.result
 
                     result?.forEach { queryDocumentSnapshot ->
-                        val boysExpecattions = queryDocumentSnapshot.toObject(GirlsResponse::class.java)
+                        val girlsExpecattions = queryDocumentSnapshot.toObject(GirlsExpectation::class.java)
 
-//                        if (boysExpecattions.Password == password) {
+//                        if (girlsExpecattions.Password == password) {
 //                            sortedResponses = list.mapIndexed { index, registration ->
-//                                val (matchPercentage, matchedTraits, unmatchedTraits) = calculateMatchData(boysExpecattions, girsResponse[index])
-//
-//
-//                                Log.d("SORT_AND_NOTIFY", "Match percentage for ${registration.Name}: $matchPercentage%")
+//                                val (matchPercentage, matchedTraits, unmatchedTraits) = calculateMatchData(girlsExpecattions, boysResponse[index])
 //                                Triple(matchPercentage, registration, Pair(matchedTraits, unmatchedTraits))
 //                            }.sortedByDescending { it.first }
 //
-//                            Log.d("SORT_AND_NOTIFY", "Sorted Responses: $sortedResponses")
 //                            notifyDataSetChanged()
 //                        }
                     }
@@ -128,19 +106,19 @@ class RegistrationAdapter(
             }
     }
 
-    private fun calculateMatchData(boy: GirlsResponse, girl: GirlsResponse): Triple<Int, List<String>, List<String>> {
+    private fun calculateMatchData(boy: GirlsExpectation, girl: GirlsExpectation): Triple<Int, List<String>, List<String>> {
         val boyAttributes = listOf(
             boy.First, boy.Second, boy.Third, boy.Fourth,
             boy.Fifth, boy.Sixth, boy.Seventh, boy.Eigth,
             boy.Ninth, boy.Tenth, boy.Eleventh, boy.Twelveth,
-            boy.Thirteenth, boy.Fourteenth, boy.Fifteenth, boy.Sixteenth
+            boy.Thirteenth, boy.Fourteenth
         )
 
         val girlAttributes = listOf(
             girl.First, girl.Second, girl.Third, girl.Fourth,
             girl.Fifth, girl.Sixth, girl.Seventh, girl.Eigth,
             girl.Ninth, girl.Tenth, girl.Eleventh, girl.Twelveth,
-            girl.Thirteenth, girl.Fourteenth, girl.Fifteenth, girl.Sixteenth
+            girl.Thirteenth, girl.Fourteenth
         )
 
         val total = boyAttributes.size
@@ -149,29 +127,12 @@ class RegistrationAdapter(
         val matchedTraits = mutableListOf<String>()
         val unmatchedTraits = mutableListOf<String>()
 
-        // Check the first eight attributes directly
-        for (i in 0..7) {
+        for (i in boyAttributes.indices) {
             if (boyAttributes[i]?.equals(girlAttributes[i], ignoreCase = true) == true) {
                 matches++
-                matchedTraits.add("Expectation ${i + 1}: ${boyAttributes[i]}")
+                matchedTraits.add(boyAttributes[i] ?: "")
             } else {
-                unmatchedTraits.add("Expectation ${i + 1}: ${boyAttributes[i]}")
-            }
-        }
-
-        // Check the last eight attributes against all girl attributes from 9 to 16
-        for (i in 8..15) {
-            var matched = false
-            for (j in 8..15) {
-                if (boyAttributes[i]?.equals(girlAttributes[j], ignoreCase = true) == true) {
-                    matches++
-                    matchedTraits.add("Expectation ${i + 1}: ${boyAttributes[i]}")
-                    matched = true
-                    break
-                }
-            }
-            if (!matched) {
-                unmatchedTraits.add("Expectation ${i + 1}: ${boyAttributes[i]}")
+                unmatchedTraits.add(boyAttributes[i] ?: "")
             }
         }
 

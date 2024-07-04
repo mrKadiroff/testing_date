@@ -1,8 +1,9 @@
 package com.example.testoviy_dating.models
 
-class GirlsResponse {
+import java.io.Serializable
 
-    var Password: String? = null
+class GirlsResponse:Serializable {
+
     var First: String? = null
     var Second: String? = null
     var Third: String? = null
@@ -25,7 +26,6 @@ class GirlsResponse {
 
 
     constructor(
-        Password: String?,
         First: String?,
         Second: String?,
         Third: String?,
@@ -43,7 +43,6 @@ class GirlsResponse {
         Fifteenth: String?,
         Sixteenth: String?
     ) {
-        this.Password = Password
         this.First = First
         this.Second = Second
         this.Third = Third

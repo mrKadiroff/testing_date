@@ -6,15 +6,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".bottomfragments.SearchFragment">
 
-    <TextView
-        android:id="@+id/kettu"
+
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="34sp"
-        android:text="Search page"
+        android:text="Check"
+        android:id="@+id/check"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/rv"
+
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/registration_layout"
+        app:layout_constraintTop_toBottomOf="@id/check"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="20dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

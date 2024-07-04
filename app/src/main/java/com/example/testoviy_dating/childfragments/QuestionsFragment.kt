@@ -131,26 +131,32 @@ class QuestionsFragment : Fragment() {
     private fun saveResults(results: List<String>, selectedTraits: List<BoysTraits>) {
         val password = (activity as? BottomActivity)?.intent?.getStringExtra("password")
 
-        val girlsExpectation = GirlsExpectation(password, results[0],results[1],results[2],results[3],results[4],results[5],
+        val girlsExpectation = GirlsExpectation( results[0],results[1],results[2],results[3],results[4],results[5],
             results[6],results[7],results[8],selectedTraits[0].name,selectedTraits[1].name,selectedTraits[2].name,selectedTraits[3].name,selectedTraits[4].name,)
 
-        firebaseFirestore.collection("girls_expectation")
-            .add(girlsExpectation)
-            .addOnSuccessListener {
-                Toast.makeText(
-                    binding.root.context,
-                    "Succesfully saved",
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
 
-                findNavController().navigate(R.id.girlsResponseFragment)
+        var bundle = Bundle()
+        bundle.putSerializable("g_exp",girlsExpectation)
+
+        findNavController().navigate(R.id.girlsResponseFragment,bundle)
+
+//        firebaseFirestore.collection("girls_expectation")
+//            .add(girlsExpectation)
+//            .addOnSuccessListener {
+//                Toast.makeText(
+//                    binding.root.context,
+//                    "Succesfully saved",
+//                    Toast.LENGTH_SHORT
+//                )
+//                    .show()
 
 
 
-            }.addOnFailureListener {
-                Toast.makeText(binding.root.context, it.message, Toast.LENGTH_SHORT).show()
-            }
+
+
+//            }.addOnFailureListener {
+//                Toast.makeText(binding.root.context, it.message, Toast.LENGTH_SHORT).show()
+//            }
 
 
 

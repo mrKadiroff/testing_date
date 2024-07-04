@@ -40,7 +40,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun login() {
         binding.next.setOnClickListener {
-           ShowDialgue()
+            val intent = Intent(this, BottomActivity::class.java)
+            intent.putExtra("reg","registration")
+            startActivity(intent)
         }
     }
 
@@ -116,30 +118,35 @@ class MainActivity : AppCompatActivity() {
                     Registration(name, surname, age, gender, password, passwordRecovery)
 
 
-                firebaseFirestore.collection("registration")
-                    .add(registration)
-                    .addOnSuccessListener {
-                        Toast.makeText(
-                            binding.root.context,
-                            "Succesfully saved",
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-
-                        val intent = Intent(this, BottomActivity::class.java)
-                        startActivity(intent)
+                val intent = Intent(this, BottomActivity::class.java)
+                intent.putExtra("reg",registration)
+                startActivity(intent)
 
 
-                    }.addOnFailureListener {
-                        Toast.makeText(binding.root.context, it.message, Toast.LENGTH_SHORT).show()
-                    }
-            } else {
-                Toast.makeText(
-                    binding.root.context,
-                    "Please add full information",
-                    Toast.LENGTH_SHORT
-                ).show()
-
+//                firebaseFirestore.collection("registration")
+//                    .add(registration)
+//                    .addOnSuccessListener {
+//                        Toast.makeText(
+//                            binding.root.context,
+//                            "Succesfully saved",
+//                            Toast.LENGTH_SHORT
+//                        )
+//                            .show()
+//
+//                        val intent = Intent(this, BottomActivity::class.java)
+//                        startActivity(intent)
+//
+//
+//                    }.addOnFailureListener {
+//                        Toast.makeText(binding.root.context, it.message, Toast.LENGTH_SHORT).show()
+//                    }
+//            } else {
+//                Toast.makeText(
+//                    binding.root.context,
+//                    "Please add full information",
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//
             }
 
 
