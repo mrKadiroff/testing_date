@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.testoviy_dating.R
 import com.example.testoviy_dating.databinding.FragmentDashboardBinding
 import com.example.testoviy_dating.databinding.FragmentSearchBinding
-import com.example.testoviy_dating.newadapters.BoyReg
 import com.example.testoviy_dating.newadapters.UsersAdapter
 import com.example.testoviy_dating.newadapters.UsersGirlsAdapter
 import com.example.testoviy_dating.newreg.BoysReg
@@ -46,7 +45,7 @@ class SearchFragment : Fragment() {
 //    private lateinit var recyclerView: RecyclerView
 //    private lateinit var adapter: UsersAdapter
     lateinit var firebaseFirestore: FirebaseFirestore
-    lateinit var list: ArrayList<BoyReg>
+    lateinit var list: ArrayList<BoysReg>
     lateinit var list2: ArrayList<GirlsReg>
     private  val TAG = "SearchFragment"
     override fun onCreateView(
@@ -58,8 +57,8 @@ class SearchFragment : Fragment() {
         firebaseFirestore = FirebaseFirestore.getInstance()
 
 
-//     fetchDataFromFirestore()
-        fetchDataforBoys()
+     fetchDataFromFirestore()
+
 
 
         return binding.root
@@ -90,47 +89,40 @@ class SearchFragment : Fragment() {
 
 
 
-//    private fun fetchDataFromFirestore() {
-//        list = ArrayList()
-//        firebaseFirestore.collection("boy_reg")
-//            .get()
-//            .addOnCompleteListener { task ->
-//                if (task.isSuccessful) {
-//                    val result = task.result
-//                    result?.forEach { queryDocumentSnapshot ->
-//                        // Log the raw document data
-//                        Log.d("FirestoreData", "Document data: ${queryDocumentSnapshot.data}")
-//
-//                        // Convert document to BoysReg object
-//                        val boyReg = queryDocumentSnapshot.toObject(BoyReg::class.java)
-//                        Log.d("FirestoreData", "Converted data: $boyReg")
-//
-//                        // Check and log BoysExpectation and BoysResponse fields
-//                        Log.d("FirestoreData", "BoysExpectation: ${boyReg.BoysQuest}")
-//                        Log.d("FirestoreData", "BoysResponse: ${boyReg.BoysResponse}")
-//
-//                        list.add(boyReg)
-//                        adapter = UsersAdapter(list,object :UsersAdapter.OnItremClickListener{
-//                            override fun onItemClick(malumotlar: BoyReg) {
-//
-//                            }
-//
-//                        })
-//
-//                        binding.rv.adapter = adapter
-//                    }
-//                } else {
-//                    Log.e("FirestoreError", "Error getting documents.", task.exception)
-//                    Toast.makeText(binding.root.context, "Error getting documents.", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//
-//        binding.check.setOnClickListener {
-//            if (list.isNotEmpty()) {
-//                Toast.makeText(binding.root.context, list[0].BoysQuest?.First, Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//    }
+    private fun fetchDataFromFirestore() {
+        var adapter : UsersAdapter
+        list = ArrayList()
+        firebaseFirestore.collection("boy_reg")
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val result = task.result
+                    result?.forEach { queryDocumentSnapshot ->
+                        // Log the raw document data
+                        Log.d("FirestoreData", "Document data: ${queryDocumentSnapshot.data}")
+
+                        // Convert document to BoysReg object
+                        val boyReg = queryDocumentSnapshot.toObject(BoysReg::class.java)
+
+
+                        list.add(boyReg)
+                        adapter = UsersAdapter(list,object :UsersAdapter.OnItremClickListener{
+                            override fun onItemClick(malumotlar: BoysReg) {
+
+                            }
+
+                        })
+
+                        binding.rv.adapter = adapter
+                    }
+                } else {
+                    Log.e("FirestoreError", "Error getting documents.", task.exception)
+                    Toast.makeText(binding.root.context, "Error getting documents.", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+
+    }
 
 
 

@@ -25,135 +25,82 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class RecommendationFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
-
     lateinit var binding: FragmentRecommendationBinding
     lateinit var firebaseFirestore: FirebaseFirestore
     lateinit var list: ArrayList<GirlsReg>
     private val TAG = "RecommendationFragment"
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentRecommendationBinding.inflate(layoutInflater,container,false)
+        binding = FragmentRecommendationBinding.inflate(layoutInflater, container, false)
         firebaseFirestore = FirebaseFirestore.getInstance()
-
 
         val gender = (activity as? BottomActivity)?.intent?.getStringExtra("gender")
 
-        if (gender == "Male"){
-            setRv()
-            boyData()
-        }else{
-            Toast.makeText(binding.root.context, "You are fucking female", Toast.LENGTH_SHORT).show()
-            setRvForGIrls()
+        if (gender == "Male") {
+            setEmptyRv()
+        } else {
+            Toast.makeText(binding.root.context, "You are female", Toast.LENGTH_SHORT).show()
+            setRvForGirls()
         }
-        
-        
-       
-       
-
 
         return binding.root
     }
 
-    private fun setRvForGIrls() {
-
-    }
-
-    private fun setRv() {
-        var usersGirlsAdapter: UsersGirlsAdapter
+    private fun setEmptyRv() {
         list = ArrayList()
-        firebaseFirestore.collection("girl_reg")
-            .get()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val result = task.result
-                    result?.forEach { queryDocumentSnapshot ->
-
-                        val girlReg = queryDocumentSnapshot.toObject(GirlsReg::class.java)
-                        list.add(girlReg)
-                        boyData()
-
-
-                        firebaseFirestore.collection("boy_reg")
-                            .get()
-                            .addOnCompleteListener { task ->
-                                if (task.isSuccessful) {
-                                    val result = task.result
-                                    result?.forEach { queryDocumentSnapshot ->
-
-                                        // Convert document to BoysReg object
-                                        val boyReg = queryDocumentSnapshot.toObject(BoysReg::class.java)
-
-
-
-                                        usersGirlsAdapter = UsersGirlsAdapter(list,boyReg,object : UsersGirlsAdapter.OnItremClickListener{
-                                            override fun onItemClick(malumotlar: GirlsReg) {
-
-                                            }
-
-
-                                        })
-
-                                        binding.rv.adapter = usersGirlsAdapter
-
-
-
-
-                                    }
-                                }
-                            }
-
-
-
-
-
-
-
-
-
-                    }
-                } else {
-                    Log.e("FirestoreError", "Error getting documents.", task.exception)
-                    Toast.makeText(binding.root.context, "Error getting documents.", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-
-
-    }
-
-    private fun boyData() {
         firebaseFirestore.collection("boy_reg")
             .get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val result = task.result
                     result?.forEach { queryDocumentSnapshot ->
-
                         // Convert document to BoysReg object
-                        val girlReg = queryDocumentSnapshot.toObject(BoysReg::class.java)
-                        Log.d(TAG, "boyData: ${girlReg.BoysExpectation!!.First} va ${girlReg.BoysResponse!!.First}")
+                        val passowrd = (activity as? BottomActivity)?.intent?.getStringExtra("password")
+                        val boyReg = queryDocumentSnapshot.toObject(BoysReg::class.java)
+
+                        if (boyReg.Password == passowrd){
+                            fetchDataFromFirebase { girlsList ->
+                                val usersGirlsAdapter = UsersGirlsAdapter(girlsList, boyReg, object : UsersGirlsAdapter.OnItremClickListener {
+                                    override fun onItemClick(malumotlar: GirlsReg) {
+                                        // Handle item click
+                                    }
+                                })
+
+                                binding.rv.adapter = usersGirlsAdapter
+                            }
+                        }
+
+
 
                     }
                 }
             }
-
-
     }
 
+    private fun setRvForGirls() {
+        // Implement if needed
+    }
+
+    private fun fetchDataFromFirebase(callback: (List<GirlsReg>) -> Unit) {
+        val girlsList = ArrayList<GirlsReg>()
+
+        firebaseFirestore.collection("girl_reg")
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val result = task.result
+                    result?.forEach { queryDocumentSnapshot ->
+                        val girlReg = queryDocumentSnapshot.toObject(GirlsReg::class.java)
+                        girlsList.add(girlReg)
+                    }
+                    callback(girlsList) // Call the callback after fetching all data
+                }
+            }
+    }
 
     companion object {
         /**
@@ -164,7 +111,6 @@ class RecommendationFragment : Fragment() {
          * @param param2 Parameter 2.
          * @return A new instance of fragment RecommendationFragment.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             RecommendationFragment().apply {

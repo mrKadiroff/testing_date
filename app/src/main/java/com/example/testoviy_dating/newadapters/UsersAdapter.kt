@@ -6,15 +6,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.testoviy_dating.databinding.RegistrationLayoutBinding
 import com.example.testoviy_dating.newreg.BoysReg
 
-class UsersAdapter(var list: List<BoyReg>, var onItremClickListener: OnItremClickListener): RecyclerView.Adapter<UsersAdapter.Vh>() {
+class UsersAdapter(var list: List<BoysReg>, var onItremClickListener: OnItremClickListener): RecyclerView.Adapter<UsersAdapter.Vh>() {
 
     inner class Vh(var itemUserBinding: RegistrationLayoutBinding) :
         RecyclerView.ViewHolder(itemUserBinding.root) {
 
 
-        fun onBind(malumot: BoyReg) {
+        fun onBind(malumot: BoysReg) {
            itemUserBinding.namecha.text = malumot.Name
-            itemUserBinding.surnamecha.text = malumot.BoysQuest?.First
+            itemUserBinding.surnamecha.text = malumot.BoysExpectation!!.First
 
             itemUserBinding.root.setOnClickListener {
                 onItremClickListener.onItemClick(malumot)
@@ -37,7 +37,7 @@ class UsersAdapter(var list: List<BoyReg>, var onItremClickListener: OnItremClic
     }
 
     interface OnItremClickListener{
-        fun onItemClick(malumotlar: BoyReg)
+        fun onItemClick(malumotlar: BoysReg)
     }
 
 
