@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.example.testoviy_dating.BottomActivity
+import com.example.testoviy_dating.R
 import com.example.testoviy_dating.databinding.FragmentRecommendationBinding
 import com.example.testoviy_dating.newadapters.UsersBoysAdapter
 import com.example.testoviy_dating.newadapters.UsersGirlsAdapter
@@ -72,8 +74,8 @@ class RecommendationFragment : Fragment() {
                         if (girlReg.Password == passowrd){
                             fetchDataFromFirebaseforGirls { boysList ->
                                 val usersBoysAdapter = UsersBoysAdapter(boysList, girlReg, object : UsersBoysAdapter.OnItremClickListener {
-                                    override fun onItemClick(malumotlar: BoysReg) {
-
+                                    override fun onItemClick(malumotlar: BoysReg, percentage: Int) {
+                                        Toast.makeText(binding.root.context, percentage.toString(), Toast.LENGTH_SHORT).show()
                                     }
 
 
@@ -118,9 +120,15 @@ class RecommendationFragment : Fragment() {
                                 val usersGirlsAdapter = UsersGirlsAdapter(girlsList, boyReg, object : UsersGirlsAdapter.OnItremClickListener {
                                     override fun onItemClick(
                                         malumotlar: GirlsReg,
-                                        percentage: Int
+                                        percentage: Int,
+                                        boyReg: BoysReg
                                     ) {
-                                        Toast.makeText(binding.root.context, percentage.toString(), Toast.LENGTH_SHORT).show()
+                                        var bundle = Bundle()
+                                        bundle.putString("gender","Male")
+                                        bundle.putInt("percentage",percentage)
+                                        bundle.putSerializable("userDataBoy",boyReg)
+                                        bundle.putSerializable("girlData",malumotlar)
+                                        findNavController().navigate(R.id.percentageFragment,bundle)
                                     }
 
                                 })

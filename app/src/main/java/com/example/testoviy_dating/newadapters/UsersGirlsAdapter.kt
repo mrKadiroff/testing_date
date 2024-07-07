@@ -28,7 +28,7 @@ class UsersGirlsAdapter(
             itemUserBinding.gender.text = "${girlRegWithPercentage.matchingPercentage}%"
 
             itemUserBinding.root.setOnClickListener {
-                onItremClickListener.onItemClick(malumot,girlRegWithPercentage.matchingPercentage)
+                onItremClickListener.onItemClick(malumot,girlRegWithPercentage.matchingPercentage,boyReg)
             }
         }
     }
@@ -46,7 +46,7 @@ class UsersGirlsAdapter(
     }
 
     interface OnItremClickListener {
-        fun onItemClick(malumotlar: GirlsReg,percentage:Int)
+        fun onItemClick(malumotlar: GirlsReg, percentage: Int, boyReg: BoysReg)
     }
 
     private fun calculateMatchingPercentage(boyExpectations: GirlsResponse?, girlResponses: GirlsResponse?): Int {

@@ -45,4 +45,9 @@
         android:name="com.example.testoviy_dating.childfragments.BoysResponseFragment"
         android:label="fragment_boys_response"
         tools:layout="@layout/fragment_boys_response" />
+    <fragment
+        android:id="@+id/percentageFragment"
+        android:name="com.example.testoviy_dating.childfragments.PercentageFragment"
+        android:label="fragment_percentage"
+        tools:layout="@layout/fragment_percentage" />
 </navigation>
