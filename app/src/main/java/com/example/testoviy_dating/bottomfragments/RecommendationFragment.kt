@@ -74,8 +74,16 @@ class RecommendationFragment : Fragment() {
                         if (girlReg.Password == passowrd){
                             fetchDataFromFirebaseforGirls { boysList ->
                                 val usersBoysAdapter = UsersBoysAdapter(boysList, girlReg, object : UsersBoysAdapter.OnItremClickListener {
-                                    override fun onItemClick(malumotlar: BoysReg, percentage: Int) {
-                                        Toast.makeText(binding.root.context, percentage.toString(), Toast.LENGTH_SHORT).show()
+                                    override fun onItemClick(
+                                        malumotlar: BoysReg,
+                                        percentage: Int,
+                                        girlReg: GirlsReg
+                                    ) {
+                                        var bundle = Bundle()
+                                        bundle.putInt("percentage",percentage)
+                                        bundle.putSerializable("userDataGirl",girlReg)
+                                        bundle.putSerializable("boyData",malumotlar)
+                                        findNavController().navigate(R.id.girlsPercentageFragment,bundle)
                                     }
 
 

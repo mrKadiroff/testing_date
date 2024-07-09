@@ -40,28 +40,17 @@
         android:paddingHorizontal="15dp"/>
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sizga mos keladigan jihatlari:"
-            android:textSize="18sp"
-            app:layout_constraintTop_toBottomOf="@id/matchings"
-            android:layout_marginTop="20sp"
-            android:layout_marginStart="12dp"
-            app:layout_constraintStart_toStartOf="parent"
-            android:id="@+id/matchedIntro"/>
 
 
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/matchedIntro"
-            android:layout_marginTop="12dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_question" />
+       <Button
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="siz u qizning talablariga qanchalik mosligingizni bilish uchn bosing"
+           app:layout_constraintTop_toBottomOf="@id/matchings"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintEnd_toEndOf="parent"
+           android:layout_marginTop="40sp"
+           android:id="@+id/kettu"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

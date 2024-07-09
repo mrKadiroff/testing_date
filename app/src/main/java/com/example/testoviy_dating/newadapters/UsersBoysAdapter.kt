@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testoviy_dating.databinding.RegistrationLayoutBinding
 import com.example.testoviy_dating.models.GirlsExpectation
-import com.example.testoviy_dating.models.GirlsResponse
 import com.example.testoviy_dating.newreg.BoysReg
 import com.example.testoviy_dating.newreg.GirlsReg
 
@@ -29,9 +28,8 @@ class UsersBoysAdapter(
             itemUserBinding.gender.text = "${boysRegWithPercentage.matchingPercentage}%"
 
             itemUserBinding.root.setOnClickListener {
-                onItremClickListener.onItemClick(malumot,boysRegWithPercentage.matchingPercentage)
+                onItremClickListener.onItemClick(malumot,boysRegWithPercentage.matchingPercentage,girlReg)
             }
-
         }
 
     }
@@ -49,7 +47,7 @@ class UsersBoysAdapter(
     }
 
     interface OnItremClickListener{
-        fun onItemClick(malumotlar: BoysReg,percentage:Int)
+        fun onItemClick(malumotlar: BoysReg, percentage: Int, girlReg: GirlsReg)
     }
 
 

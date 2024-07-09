@@ -50,4 +50,19 @@
         android:name="com.example.testoviy_dating.childfragments.PercentageFragment"
         android:label="fragment_percentage"
         tools:layout="@layout/fragment_percentage" />
+    <fragment
+        android:id="@+id/percentageChildFragment"
+        android:name="com.example.testoviy_dating.childfragments.PercentageChildFragment"
+        android:label="fragment_percentage_child"
+        tools:layout="@layout/fragment_percentage_child" />
+    <fragment
+        android:id="@+id/girlsPercentageFragment"
+        android:name="com.example.testoviy_dating.childfragments.GirlsPercentageFragment"
+        android:label="fragment_girls_percentage"
+        tools:layout="@layout/fragment_girls_percentage" />
+    <fragment
+        android:id="@+id/girlsPercentageChildFragment"
+        android:name="com.example.testoviy_dating.childfragments.GirlsPercentageChildFragment"
+        android:label="fragment_girls_percentage_child"
+        tools:layout="@layout/fragment_girls_percentage_child" />
 </navigation>

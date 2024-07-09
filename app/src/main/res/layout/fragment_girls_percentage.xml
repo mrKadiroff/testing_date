@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".childfragments.GirlsPercentageFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Faro'gat Ibragimova"
+            android:textSize="20sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/expectations"
+            android:layout_marginTop="20sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="Bu qiz sizning talablaringizga 90 foiz mos kelad"
+            app:layout_constraintTop_toBottomOf="@id/expectations"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="15dp"
+            android:id="@+id/response"
+            android:paddingHorizontal="15dp"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="Bu qiz sizning talablaringizga 90 foiz mos kelad"
+            app:layout_constraintTop_toBottomOf="@id/response"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="15dp"
+            android:id="@+id/percentage"
+            android:paddingHorizontal="15dp"/>
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="siz u qizning talablariga qanchalik mosligingizni bilish uchn bosing"
+            app:layout_constraintTop_toBottomOf="@id/percentage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="40sp"
+            android:id="@+id/kettu"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.core.widget.NestedScrollView>
