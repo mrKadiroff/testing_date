@@ -6,4 +6,10 @@
         <item>Male</item>
         <item>Female</item>
     </string-array>
+
+    <string-array name="height_options">
+        <item>1.50 to 1.60</item>
+        <item>1.60 to 1.75</item>
+        <item>1.75+</item>
+    </string-array>
 </resources>

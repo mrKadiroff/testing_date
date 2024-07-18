@@ -9,9 +9,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.testoviy_dating.BottomActivity
 import com.example.testoviy_dating.R
 import com.example.testoviy_dating.databinding.FragmentDashboardBinding
 import com.example.testoviy_dating.databinding.FragmentSearchBinding
+import com.example.testoviy_dating.newadapters.SearchBoysAdapter
 import com.example.testoviy_dating.newadapters.UsersAdapter
 import com.example.testoviy_dating.newadapters.UsersGirlsAdapter
 import com.example.testoviy_dating.newreg.BoysReg
@@ -42,8 +44,7 @@ class SearchFragment : Fragment() {
     }
 
     lateinit var binding: FragmentSearchBinding
-//    private lateinit var recyclerView: RecyclerView
-//    private lateinit var adapter: UsersAdapter
+    private lateinit var adapter: SearchBoysAdapter
     lateinit var firebaseFirestore: FirebaseFirestore
     lateinit var list: ArrayList<BoysReg>
     lateinit var list2: ArrayList<GirlsReg>
@@ -57,11 +58,29 @@ class SearchFragment : Fragment() {
         firebaseFirestore = FirebaseFirestore.getInstance()
 
 
-     fetchDataFromFirestore()
+        val gender = (activity as? BottomActivity)?.intent?.getStringExtra("gender")
+        val password = (activity as? BottomActivity)?.intent?.getStringExtra("password")
+
+
+        if (gender == "Male"){
+            Toast.makeText(binding.root.context, "YOu are male", Toast.LENGTH_SHORT).show()
+            setRvForBoys()
+            setSpinner()
+        }else{
+            Toast.makeText(binding.root.context, "YOu are Female", Toast.LENGTH_SHORT).show()
+        }
 
 
 
         return binding.root
+    }
+
+    private fun setSpinner() {
+
+    }
+
+    private fun setRvForBoys() {
+        fetchDataforBoys()
     }
 
     private fun fetchDataforBoys() {
@@ -75,89 +94,26 @@ class SearchFragment : Fragment() {
 
                         // Convert document to BoysReg object
                         val girlReg = queryDocumentSnapshot.toObject(GirlsReg::class.java)
-
-
-                    }
-                }
-            }
-
-
-
-
-    }
-
-
-
-
-    private fun fetchDataFromFirestore() {
-        var adapter : UsersAdapter
-        list = ArrayList()
-        firebaseFirestore.collection("boy_reg")
-            .get()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val result = task.result
-                    result?.forEach { queryDocumentSnapshot ->
-                        // Log the raw document data
-                        Log.d("FirestoreData", "Document data: ${queryDocumentSnapshot.data}")
-
-                        // Convert document to BoysReg object
-                        val boyReg = queryDocumentSnapshot.toObject(BoysReg::class.java)
-
-
-                        list.add(boyReg)
-                        adapter = UsersAdapter(list,object :UsersAdapter.OnItremClickListener{
-                            override fun onItemClick(malumotlar: BoysReg) {
+                        list2.add(girlReg)
+                        adapter = SearchBoysAdapter(list2, object :SearchBoysAdapter.OnItremClickListener{
+                            override fun onItemClick(malumotlar: GirlsReg) {
 
                             }
 
                         })
 
                         binding.rv.adapter = adapter
+
                     }
-                } else {
-                    Log.e("FirestoreError", "Error getting documents.", task.exception)
-                    Toast.makeText(binding.root.context, "Error getting documents.", Toast.LENGTH_SHORT).show()
                 }
             }
+
+
 
 
     }
 
 
-
-
-//    private fun setRv() {
-//        list = ArrayList()
-//        firebaseFirestore.collection("boy_reg")
-//            .get()
-//            .addOnCompleteListener {
-//                if (it.isSuccessful) {
-//                    val result = it.result
-//
-//                    result?.forEach { queryDocumentSnapshot ->
-//                        val boyReg = queryDocumentSnapshot.toObject(
-//                            BoyReg::class.java)
-//
-//                        binding.check.setOnClickListener {
-//                            Toast.makeText(binding.root.context, boyReg.BoysQuest!!.First, Toast.LENGTH_SHORT).show()
-//                        }
-//
-//                        list.add(boyReg)
-//
-//                        adapter = UsersAdapter(list,object :
-//                            UsersAdapter.OnItremClickListener{
-//                            override fun onItemClick(malumotlar: BoyReg) {
-//                            }
-//
-//
-//                        })
-//                        binding.rv.adapter = adapter
-//
-//
-//                    }
-//                }}
-//    }
 
     companion object {
         /**
