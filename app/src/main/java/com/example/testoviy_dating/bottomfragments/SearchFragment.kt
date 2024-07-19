@@ -6,16 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import com.example.testoviy_dating.BottomActivity
 import com.example.testoviy_dating.R
-import com.example.testoviy_dating.databinding.FragmentDashboardBinding
 import com.example.testoviy_dating.databinding.FragmentSearchBinding
 import com.example.testoviy_dating.newadapters.SearchBoysAdapter
-import com.example.testoviy_dating.newadapters.UsersAdapter
-import com.example.testoviy_dating.newadapters.UsersGirlsAdapter
 import com.example.testoviy_dating.newreg.BoysReg
 import com.example.testoviy_dating.newreg.GirlsReg
 import com.google.firebase.firestore.FirebaseFirestore
@@ -49,6 +46,9 @@ class SearchFragment : Fragment() {
     lateinit var list: ArrayList<BoysReg>
     lateinit var list2: ArrayList<GirlsReg>
     private  val TAG = "SearchFragment"
+    private var selectedHeight: String? = null
+    private var selectedWeight: String? = null
+    private var isDataLoaded = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -64,8 +64,8 @@ class SearchFragment : Fragment() {
 
         if (gender == "Male"){
             Toast.makeText(binding.root.context, "YOu are male", Toast.LENGTH_SHORT).show()
-            setRvForBoys()
             setSpinner()
+            setWeightSpinner()
         }else{
             Toast.makeText(binding.root.context, "YOu are Female", Toast.LENGTH_SHORT).show()
         }
@@ -75,15 +75,55 @@ class SearchFragment : Fragment() {
         return binding.root
     }
 
+    private fun setWeightSpinner() {
+        val weightSpinner = binding.weightSpinner
+        ArrayAdapter.createFromResource(
+            binding.root.context,
+            R.array.weight_options,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            weightSpinner.adapter = adapter
+        }
+
+        weightSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                selectedWeight = parent.getItemAtPosition(position).toString()
+                loadData()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
+    }
+
     private fun setSpinner() {
+        val heightSpinner = binding.heightSpinner
+        ArrayAdapter.createFromResource(
+            binding.root.context,
+            R.array.height_options,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            heightSpinner.adapter = adapter
+        }
 
+        heightSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                selectedHeight = parent.getItemAtPosition(position).toString()
+                loadData()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
     }
 
-    private fun setRvForBoys() {
-        fetchDataforBoys()
-    }
+    private fun loadData() {
+        Log.d(TAG, "Loading data for height: $selectedHeight and weight: $selectedWeight")
 
-    private fun fetchDataforBoys() {
+        if (selectedHeight == null || selectedWeight == null) {
+            return
+        }
+
         list2 = ArrayList()
         firebaseFirestore.collection("girl_reg")
             .get()
@@ -91,27 +131,41 @@ class SearchFragment : Fragment() {
                 if (task.isSuccessful) {
                     val result = task.result
                     result?.forEach { queryDocumentSnapshot ->
-
-                        // Convert document to BoysReg object
                         val girlReg = queryDocumentSnapshot.toObject(GirlsReg::class.java)
-                        list2.add(girlReg)
-                        adapter = SearchBoysAdapter(list2, object :SearchBoysAdapter.OnItremClickListener{
-                            override fun onItemClick(malumotlar: GirlsReg) {
-
-                            }
-
-                        })
-
-                        binding.rv.adapter = adapter
-
+                        val heightMatch = when (selectedHeight) {
+                            "1.50 to 1.60" -> girlReg.GirlsResponse!!.Fourth == "A"
+                            "1.60 to 1.75" -> girlReg.GirlsResponse!!.Fourth == "B"
+                            "1.75+" -> girlReg.GirlsResponse!!.Fourth == "C"
+                            else -> false
+                        }
+                        val weightMatch = when (selectedWeight) {
+                            "45 kg to 55" -> girlReg.GirlsResponse!!.Fifth == "A"
+                            "55 to 65" -> girlReg.GirlsResponse!!.Fifth == "B"
+                            "65+" -> girlReg.GirlsResponse!!.Fifth == "C"
+                            else -> false
+                        }
+                        if (heightMatch && weightMatch) {
+                            list2.add(girlReg)
+                        }
                     }
+
+                    if (!::adapter.isInitialized) {
+                        adapter = SearchBoysAdapter(list2, object : SearchBoysAdapter.OnItremClickListener {
+                            override fun onItemClick(malumotlar: GirlsReg) {
+                                // Handle item click
+                            }
+                        })
+                        binding.rv.adapter = adapter
+                    } else {
+                        adapter.updateList(list2)
+                    }
+                } else {
+                    Log.e(TAG, "Error fetching data", task.exception)
                 }
             }
-
-
-
-
     }
+
+
 
 
 
