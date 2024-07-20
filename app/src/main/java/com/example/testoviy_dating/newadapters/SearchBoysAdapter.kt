@@ -14,7 +14,7 @@ class SearchBoysAdapter(private var list: List<GirlsReg>, private val onItremCli
         RecyclerView.ViewHolder(itemUserBinding.root) {
         fun onBind(malumot: GirlsReg) {
             itemUserBinding.namecha.text = malumot.Name
-            itemUserBinding.surnamecha.text = malumot.GirlsResponse!!.First
+            itemUserBinding.surnamecha.text = malumot.Region
             itemUserBinding.root.setOnClickListener {
                 onItremClickListener.onItemClick(malumot)
             }

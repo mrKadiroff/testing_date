@@ -3,6 +3,8 @@ package com.example.testoviy_dating
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -21,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     lateinit var firebaseFirestore: FirebaseFirestore
     lateinit var list: ArrayList<Registration>
+    private var selectedRegion: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -31,11 +34,33 @@ class MainActivity : AppCompatActivity() {
         setSpinner()
         addToFirestore()
         login()
+        setRegions()
 
 
 
 
 
+    }
+
+    private fun setRegions() {
+        val regionSpinner = binding.regions
+        ArrayAdapter.createFromResource(
+            binding.root.context,
+            R.array.uzbekistan_regions,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            regionSpinner.adapter = adapter
+        }
+
+        regionSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                selectedRegion = parent.getItemAtPosition(position).toString()
+
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
     }
 
     private fun login() {
@@ -92,7 +117,7 @@ class MainActivity : AppCompatActivity() {
 
             if (name.isNotEmpty() && surname.isNotEmpty() && age.isNotEmpty() && gender.isNotEmpty() && password.isNotEmpty() && passwordRecovery.isNotEmpty()) {
                 val registration =
-                    Registration(name, surname, age, gender, password, passwordRecovery)
+                    Registration(name, surname, age, gender, password, passwordRecovery,selectedRegion)
 
 
                 val intent = Intent(this, BottomActivity::class.java)

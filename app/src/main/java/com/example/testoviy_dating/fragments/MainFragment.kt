@@ -61,46 +61,46 @@ class MainFragment : Fragment() {
 
     private fun addToFirestore() {
 
-        binding.add.setOnClickListener {
-            // Set the item selected listener
-            val name = binding.name.text.toString().trim()
-            val surname = binding.surname.text.toString().trim()
-            val age = binding.age.text.toString().trim()
-            val gender = binding.genderSpinner.selectedItem.toString()
-            val password = binding.password.text.toString().trim()
-            val passwordRecovery = binding.passwordrecovery.text.toString().trim()
-
-            if (name.isNotEmpty() && surname.isNotEmpty() && age.isNotEmpty() && gender.isNotEmpty() && password.isNotEmpty() && passwordRecovery.isNotEmpty()) {
-                val registration =
-                    Registration(name, surname, age, gender, password, passwordRecovery)
-
-
-                firebaseFirestore.collection("registration")
-                    .add(registration)
-                    .addOnSuccessListener {
-                        Toast.makeText(
-                            binding.root.context,
-                            "Succesfully saved",
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-                        requireFragmentManager().popBackStack()
-
-
-                    }.addOnFailureListener {
-                        Toast.makeText(binding.root.context, it.message, Toast.LENGTH_SHORT).show()
-                    }
-            } else {
-                Toast.makeText(
-                    binding.root.context,
-                    "Please add full information",
-                    Toast.LENGTH_SHORT
-                ).show()
-
-            }
-
-
-        }
+//        binding.add.setOnClickListener {
+//            // Set the item selected listener
+//            val name = binding.name.text.toString().trim()
+//            val surname = binding.surname.text.toString().trim()
+//            val age = binding.age.text.toString().trim()
+//            val gender = binding.genderSpinner.selectedItem.toString()
+//            val password = binding.password.text.toString().trim()
+//            val passwordRecovery = binding.passwordrecovery.text.toString().trim()
+//
+//            if (name.isNotEmpty() && surname.isNotEmpty() && age.isNotEmpty() && gender.isNotEmpty() && password.isNotEmpty() && passwordRecovery.isNotEmpty()) {
+//                val registration =
+//                    Registration(name, surname, age, gender, password, passwordRecovery)
+//
+//
+//                firebaseFirestore.collection("registration")
+//                    .add(registration)
+//                    .addOnSuccessListener {
+//                        Toast.makeText(
+//                            binding.root.context,
+//                            "Succesfully saved",
+//                            Toast.LENGTH_SHORT
+//                        )
+//                            .show()
+//                        requireFragmentManager().popBackStack()
+//
+//
+//                    }.addOnFailureListener {
+//                        Toast.makeText(binding.root.context, it.message, Toast.LENGTH_SHORT).show()
+//                    }
+//            } else {
+//                Toast.makeText(
+//                    binding.root.context,
+//                    "Please add full information",
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//
+//            }
+//
+//
+//        }
     }
 
     private fun setSpinner() {

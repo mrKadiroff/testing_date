@@ -28,51 +28,69 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class SearchFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
 
     lateinit var binding: FragmentSearchBinding
     private lateinit var adapter: SearchBoysAdapter
     lateinit var firebaseFirestore: FirebaseFirestore
-    lateinit var list: ArrayList<BoysReg>
-    lateinit var list2: ArrayList<GirlsReg>
-    private  val TAG = "SearchFragment"
-    private var selectedHeight: String? = null
-    private var selectedWeight: String? = null
-    private var isDataLoaded = false
+    private var list2: ArrayList<GirlsReg> = ArrayList()
+    private val TAG = "SearchFragment"
+    private var selectedHeight: String? = "All heights"
+    private var selectedWeight: String? = "All weights"
+    private var selectedRegion: String? = "All regions"
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        binding = FragmentSearchBinding.inflate(layoutInflater,container,false)
+        binding = FragmentSearchBinding.inflate(layoutInflater, container, false)
         firebaseFirestore = FirebaseFirestore.getInstance()
 
-
         val gender = (activity as? BottomActivity)?.intent?.getStringExtra("gender")
-        val password = (activity as? BottomActivity)?.intent?.getStringExtra("password")
 
-
-        if (gender == "Male"){
-            Toast.makeText(binding.root.context, "YOu are male", Toast.LENGTH_SHORT).show()
+        if (gender == "Male") {
+            Toast.makeText(binding.root.context, "You are male", Toast.LENGTH_SHORT).show()
             setSpinner()
             setWeightSpinner()
-        }else{
-            Toast.makeText(binding.root.context, "YOu are Female", Toast.LENGTH_SHORT).show()
+            setRegions()
+        } else {
+            Toast.makeText(binding.root.context, "You are female", Toast.LENGTH_SHORT).show()
         }
 
+        // Initialize adapter and set it to RecyclerView
+        adapter = SearchBoysAdapter(list2, object : SearchBoysAdapter.OnItremClickListener {
+            override fun onItemClick(malumotlar: GirlsReg) {
+                // Handle item click
+            }
+        })
+        binding.rv.adapter = adapter
 
+        // Load data initially for all filters
+        loadData()
 
         return binding.root
+    }
+
+    private fun setRegions() {
+        val regionSpinner = binding.regions
+        ArrayAdapter.createFromResource(
+            binding.root.context,
+            R.array.sortRegions,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            regionSpinner.adapter = adapter
+        }
+
+        regionSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                selectedRegion = if (position == 0) "All regions" else parent.getItemAtPosition(position).toString()
+                loadData()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                selectedRegion = "All regions"
+            }
+        }
     }
 
     private fun setWeightSpinner() {
@@ -118,52 +136,48 @@ class SearchFragment : Fragment() {
     }
 
     private fun loadData() {
-        Log.d(TAG, "Loading data for height: $selectedHeight and weight: $selectedWeight")
+        Log.d(TAG, "Loading data for height: $selectedHeight, weight: $selectedWeight, and region: $selectedRegion")
 
-        if (selectedHeight == null || selectedWeight == null) {
-            return
-        }
-
-        list2 = ArrayList()
         firebaseFirestore.collection("girl_reg")
             .get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
+                    list2.clear()  // Clear the existing list before adding new data
                     val result = task.result
                     result?.forEach { queryDocumentSnapshot ->
                         val girlReg = queryDocumentSnapshot.toObject(GirlsReg::class.java)
                         val heightMatch = when (selectedHeight) {
+                            "All heights" -> true
                             "1.50 to 1.60" -> girlReg.GirlsResponse!!.Fourth == "A"
                             "1.60 to 1.75" -> girlReg.GirlsResponse!!.Fourth == "B"
                             "1.75+" -> girlReg.GirlsResponse!!.Fourth == "C"
                             else -> false
                         }
                         val weightMatch = when (selectedWeight) {
+                            "All weights" -> true
                             "45 kg to 55" -> girlReg.GirlsResponse!!.Fifth == "A"
                             "55 to 65" -> girlReg.GirlsResponse!!.Fifth == "B"
                             "65+" -> girlReg.GirlsResponse!!.Fifth == "C"
                             else -> false
                         }
-                        if (heightMatch && weightMatch) {
+                        val regionMatch = selectedRegion == "All regions" || girlReg.Region == selectedRegion
+
+                        if (heightMatch && weightMatch && regionMatch) {
                             list2.add(girlReg)
                         }
                     }
-
-                    if (!::adapter.isInitialized) {
-                        adapter = SearchBoysAdapter(list2, object : SearchBoysAdapter.OnItremClickListener {
-                            override fun onItemClick(malumotlar: GirlsReg) {
-                                // Handle item click
-                            }
-                        })
-                        binding.rv.adapter = adapter
-                    } else {
-                        adapter.updateList(list2)
-                    }
+                    adapter.notifyDataSetChanged()  // Notify the adapter of the data changes
                 } else {
                     Log.e(TAG, "Error fetching data", task.exception)
                 }
             }
     }
+
+
+
+
+
+
 
 
 

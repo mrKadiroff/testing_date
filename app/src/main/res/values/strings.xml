@@ -19,4 +19,43 @@
         <item>55 to 65</item>
         <item>65+</item>
     </string-array>
+
+
+    <string-array name="uzbekistan_regions">
+        <item>Andijon</item>
+        <item>Buxoro</item>
+        <item>Farg\'ona</item>
+        <item>Jizzax</item>
+        <item>Xorazm</item>
+        <item>Namangan</item>
+        <item>Navoiy</item>
+        <item>Qashqadaryo</item>
+        <item>Qoraqalpog\'iston</item>
+        <item>Samarqand</item>
+        <item>Sirdaryo</item>
+        <item>Surxondaryo</item>
+        <item>Toshkent shahri</item>
+        <item>Toshkent viloyati</item>
+    </string-array>
+
+
+
+
+    <string-array name="sortRegions">
+        <item>Barcha viloyatlar</item>
+        <item>Andijon</item>
+        <item>Buxoro</item>
+        <item>Farg\'ona</item>
+        <item>Jizzax</item>
+        <item>Xorazm</item>
+        <item>Namangan</item>
+        <item>Navoiy</item>
+        <item>Qashqadaryo</item>
+        <item>Qoraqalpog\'iston</item>
+        <item>Samarqand</item>
+        <item>Sirdaryo</item>
+        <item>Surxondaryo</item>
+        <item>Toshkent shahri</item>
+        <item>Toshkent viloyati</item>
+    </string-array>
 </resources>

@@ -9,17 +9,22 @@ class Registration : Serializable{
     var Gender:String? = null
     var Password: String? = null
     var RecoveryAccount: String? = null
+    var Region: String? = null
 
 
 
 
+
+
+    constructor()
     constructor(
         Name: String?,
         Surname: String?,
         Age: String?,
         Gender: String?,
         Password: String?,
-        RecoveryAccount: String?
+        RecoveryAccount: String?,
+        Region: String?
     ) {
         this.Name = Name
         this.Surname = Surname
@@ -27,7 +32,6 @@ class Registration : Serializable{
         this.Gender = Gender
         this.Password = Password
         this.RecoveryAccount = RecoveryAccount
+        this.Region = Region
     }
-
-    constructor()
 }

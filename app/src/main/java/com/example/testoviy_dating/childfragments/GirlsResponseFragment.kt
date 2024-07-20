@@ -160,7 +160,7 @@ class GirlsResponseFragment : Fragment() {
             selectedInterests[0].name,selectedInterests[1].name,selectedInterests[2].name)
 
 
-        var girlsReg = GirlsReg(regInformation.Name,regInformation.Surname,regInformation.Age,regInformation.Gender,regInformation.Password,regInformation.RecoveryAccount,
+        var girlsReg = GirlsReg(regInformation.Name,regInformation.Surname,regInformation.Age,regInformation.Gender,regInformation.Password,regInformation.RecoveryAccount,regInformation.Region,
             girlsExpectations,girlsResponse)
 
 
