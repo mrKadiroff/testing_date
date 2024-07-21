@@ -154,7 +154,7 @@ class BoysResponseFragment : Fragment() {
 
 
         val boysReg = BoysReg(regInformation.Name,regInformation.Surname,regInformation.Age,regInformation.Gender,regInformation.Password,regInformation.RecoveryAccount,
-            boysExpectations,boyResponse)
+            regInformation.Region,boysExpectations,boyResponse)
 
         firebaseFirestore.collection("boy_reg")
             .add(boysReg)

@@ -4,33 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".bottomfragments.SearchFragment">
+    tools:context=".childfragments.SearchGirlFragment">
 
 
-    <Button
-        android:layout_width="wrap_content"
+    <Spinner
+        android:id="@+id/salarySpinner"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Go to next fragment"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:id="@+id/goo"/>
+        android:layout_marginTop="16dp"/>
+
 
 
     <Spinner
         android:id="@+id/heightSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="16dp"/>
-
-    <Spinner
-        android:id="@+id/weightSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/heightSpinner"
+        app:layout_constraintTop_toBottomOf="@id/salarySpinner"
         android:layout_marginTop="16dp"/>
 
 
@@ -38,9 +28,8 @@
         android:id="@+id/regions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/weightSpinner"
+        app:layout_constraintTop_toBottomOf="@id/heightSpinner"
         android:layout_marginTop="16dp"/>
-
 
 
     <Spinner
@@ -49,7 +38,6 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/regions"
         android:layout_marginTop="16dp"/>
-
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -62,5 +50,6 @@
         app:layout_constraintTop_toBottomOf="@id/age"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginTop="20dp"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,6 +21,17 @@
     </string-array>
 
 
+    <string-array name="age_options">
+        <item>All ages</item>
+        <item>Under 18</item>
+        <item>18-24</item>
+        <item>25-34</item>
+        <item>35-44</item>
+        <item>45-54</item>
+        <item>55-64</item>
+    </string-array>
+
+
     <string-array name="uzbekistan_regions">
         <item>Andijon</item>
         <item>Buxoro</item>
@@ -37,8 +48,6 @@
         <item>Toshkent shahri</item>
         <item>Toshkent viloyati</item>
     </string-array>
-
-
 
 
     <string-array name="sortRegions">
@@ -58,4 +67,25 @@
         <item>Toshkent shahri</item>
         <item>Toshkent viloyati</item>
     </string-array>
+
+
+    //boy theme
+
+    <string-array name="salary_options">
+        <item>All salaries</item>
+        <item>. 2-4 million so\'m</item>
+        <item>5-9 million so\'m.</item>
+        <item>10mln +."</item>
+    </string-array>
+
+
+
+    <string-array name="height_optionsboys">
+        <item>All heights</item>
+        <item>1.50 to 1.60</item>
+        <item>1.60 to 1.75</item>
+        <item>1.75+</item>
+    </string-array>
+
+
 </resources>

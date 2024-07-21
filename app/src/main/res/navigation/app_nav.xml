@@ -65,4 +65,9 @@
         android:name="com.example.testoviy_dating.childfragments.GirlsPercentageChildFragment"
         android:label="fragment_girls_percentage_child"
         tools:layout="@layout/fragment_girls_percentage_child" />
+    <fragment
+        android:id="@+id/searchGirlFragment"
+        android:name="com.example.testoviy_dating.childfragments.SearchGirlFragment"
+        android:label="fragment_search_girl"
+        tools:layout="@layout/fragment_search_girl" />
 </navigation>

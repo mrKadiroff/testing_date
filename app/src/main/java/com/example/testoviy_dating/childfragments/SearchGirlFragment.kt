@@ -1,5 +1,7 @@
-package com.example.testoviy_dating.bottomfragments
+package com.example.testoviy_dating.childfragments
 
+import android.content.ContentValues.TAG
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,12 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
-import androidx.navigation.fragment.findNavController
 import com.example.testoviy_dating.BottomActivity
 import com.example.testoviy_dating.R
-import com.example.testoviy_dating.databinding.FragmentSearchBinding
+import com.example.testoviy_dating.databinding.FragmentGirlsResponseBinding
+import com.example.testoviy_dating.databinding.FragmentSearchGirlBinding
 import com.example.testoviy_dating.newadapters.SearchBoysAdapter
+import com.example.testoviy_dating.newadapters.SearchGirlsAdapter
 import com.example.testoviy_dating.newreg.BoysReg
 import com.example.testoviy_dating.newreg.GirlsReg
 import com.google.firebase.firestore.FirebaseFirestore
@@ -25,50 +27,49 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [SearchFragment.newInstance] factory method to
+ * Use the [SearchGirlFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class SearchFragment : Fragment() {
+class SearchGirlFragment : Fragment() {
+    // TODO: Rename and change types of parameters
+    private var param1: String? = null
+    private var param2: String? = null
 
-    lateinit var binding: FragmentSearchBinding
-    private lateinit var adapter: SearchBoysAdapter
-    lateinit var firebaseFirestore: FirebaseFirestore
-    private var list2: ArrayList<GirlsReg> = ArrayList()
-    private val TAG = "SearchFragment"
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            param1 = it.getString(ARG_PARAM1)
+            param2 = it.getString(ARG_PARAM2)
+        }
+    }
+
+    lateinit var binding: FragmentSearchGirlBinding
+    private var selectedSalary: String? = "All salaries"
     private var selectedHeight: String? = "All heights"
-    private var selectedWeight: String? = "All weights"
     private var selectedRegion: String? = "All regions"
     private var selectedAge: String? = "All ages"
-
+    private lateinit var adapter: SearchGirlsAdapter
+    lateinit var firebaseFirestore: FirebaseFirestore
+    private var list2: ArrayList<BoysReg> = ArrayList()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentSearchBinding.inflate(layoutInflater, container, false)
+        // Inflate the layout for this fragment
+        binding = FragmentSearchGirlBinding.inflate(layoutInflater,container,false)
         firebaseFirestore = FirebaseFirestore.getInstance()
+        setSalarySpinner()
+        setHeightPinner()
+        setRegions()
+        setAgeSpinner()
 
-        val gender = (activity as? BottomActivity)?.intent?.getStringExtra("gender")
-
-        if (gender == "Male") {
-            Toast.makeText(binding.root.context, "You are male", Toast.LENGTH_SHORT).show()
-            setSpinner()
-            setWeightSpinner()
-            setRegions()
-            setAge()
-        } else {
-            Toast.makeText(binding.root.context, "You are female", Toast.LENGTH_SHORT).show()
-            binding.rv.visibility= View.GONE
-            binding.goo.visibility = View.VISIBLE
-            binding.goo.setOnClickListener {
-                findNavController().navigate(R.id.searchGirlFragment)
-            }
-        }
 
         // Initialize adapter and set it to RecyclerView
-        adapter = SearchBoysAdapter(list2, object : SearchBoysAdapter.OnItremClickListener {
-            override fun onItemClick(malumotlar: GirlsReg) {
-                // Handle item click
+        adapter = SearchGirlsAdapter(list2, object : SearchGirlsAdapter.OnItremClickListener {
+            override fun onItemClick(malumotlar: BoysReg) {
+
             }
+
         })
         binding.rv.adapter = adapter
 
@@ -78,7 +79,7 @@ class SearchFragment : Fragment() {
         return binding.root
     }
 
-    private fun setAge() {
+    private fun setAgeSpinner() {
         val ageSpinner = binding.age
         ArrayAdapter.createFromResource(
             binding.root.context,
@@ -116,6 +117,7 @@ class SearchFragment : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 selectedRegion = if (position == 0) "All regions" else parent.getItemAtPosition(position).toString()
                 loadData()
+
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -124,91 +126,79 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun setWeightSpinner() {
-        val weightSpinner = binding.weightSpinner
+
+
+
+
+    private fun setHeightPinner() {
+        val salarySpinner = binding.heightSpinner
         ArrayAdapter.createFromResource(
             binding.root.context,
-            R.array.weight_options,
+            R.array.height_optionsboys,
             android.R.layout.simple_spinner_item
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            weightSpinner.adapter = adapter
+            salarySpinner.adapter = adapter
         }
 
-        weightSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        salarySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                selectedWeight = parent.getItemAtPosition(position).toString()
+                selectedHeight = if (position == 0) "All heights" else parent.getItemAtPosition(position).toString()
                 loadData()
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {}
-        }
-    }
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                selectedHeight = "All heights"
 
-    private fun setSpinner() {
-        val heightSpinner = binding.heightSpinner
-        ArrayAdapter.createFromResource(
-            binding.root.context,
-            R.array.height_options,
-            android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            heightSpinner.adapter = adapter
-        }
-
-        heightSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                selectedHeight = parent.getItemAtPosition(position).toString()
-                loadData()
             }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {}
         }
     }
-
     private fun parseAge(ageString: String?): Int? {
         return ageString?.toIntOrNull()
     }
-
     private fun loadData() {
-        Log.d(TAG, "Loading data for height: $selectedHeight, weight: $selectedWeight, region: $selectedRegion, and age: $selectedAge")
 
-        firebaseFirestore.collection("girl_reg")
+
+        firebaseFirestore.collection("boy_reg")
             .get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     list2.clear()  // Clear the existing list before adding new data
                     val result = task.result
                     result?.forEach { queryDocumentSnapshot ->
-                        val girlReg = queryDocumentSnapshot.toObject(GirlsReg::class.java)
+                        val boyReg = queryDocumentSnapshot.toObject(BoysReg::class.java)
+
                         val heightMatch = when (selectedHeight) {
                             "All heights" -> true
-                            "1.50 to 1.60" -> girlReg.GirlsResponse!!.Fourth == "A"
-                            "1.60 to 1.75" -> girlReg.GirlsResponse!!.Fourth == "B"
-                            "1.75+" -> girlReg.GirlsResponse!!.Fourth == "C"
-                            else -> false
-                        }
-                        val weightMatch = when (selectedWeight) {
-                            "All weights" -> true
-                            "45 kg to 55" -> girlReg.GirlsResponse!!.Fifth == "A"
-                            "55 to 65" -> girlReg.GirlsResponse!!.Fifth == "B"
-                            "65+" -> girlReg.GirlsResponse!!.Fifth == "C"
-                            else -> false
-                        }
-                        val regionMatch = selectedRegion == "All regions" || girlReg.Region == selectedRegion
-                        val ageMatch = when (selectedAge) {
-                            "All ages" -> true
-                            "Under 18" -> parseAge(girlReg.Age)?.let { it < 18 } == true
-                            "18-24" -> parseAge(girlReg!!.Age)?.let { it in 18..24 } == true
-                            "25-34" -> parseAge(girlReg!!.Age)?.let { it in 25..34 } == true
-                            "35-44" -> parseAge(girlReg!!.Age)?.let { it in 35..44 } == true
-                            "45-54" -> parseAge(girlReg!!.Age)?.let { it in 45..54 } == true
-                            "55-64" -> parseAge(girlReg!!.Age)?.let { it in 55..64 } == true
+                            "1.50 to 1.60" -> boyReg.BoysResponse!!.Third == "A"
+                            "1.60 to 1.75" -> boyReg.BoysResponse!!.Third == "B"
+                            "1.75+" -> boyReg.BoysResponse!!.Third == "C"
                             else -> false
                         }
 
-                        if (heightMatch && weightMatch && regionMatch && ageMatch) {
-                            list2.add(girlReg)
+                        val salaryMatch = when (selectedSalary) {
+                            "All salaries" -> true
+                            ". 2-4 million so'm" -> boyReg.BoysResponse!!.First == "A"
+                            "5-9 million so'm." -> boyReg.BoysResponse!!.First == "B"
+                            "10mln +." -> boyReg.BoysResponse!!.First == "C"
+                            else -> false
+                        }
+                        val regionMatch = selectedRegion == "All regions" || boyReg.Region == selectedRegion
+
+
+                        val ageMatch = when (selectedAge) {
+                            "All ages" -> true
+                            "Under 18" -> parseAge(boyReg.Age)?.let { it < 18 } == true
+                            "18-24" -> parseAge(boyReg!!.Age)?.let { it in 18..24 } == true
+                            "25-34" -> parseAge(boyReg!!.Age)?.let { it in 25..34 } == true
+                            "35-44" -> parseAge(boyReg!!.Age)?.let { it in 35..44 } == true
+                            "45-54" -> parseAge(boyReg!!.Age)?.let { it in 45..54 } == true
+                            "55-64" -> parseAge(boyReg!!.Age)?.let { it in 55..64 } == true
+                            else -> false
+                        }
+
+                        if (salaryMatch&&heightMatch&&regionMatch&&ageMatch) {
+                            list2.add(boyReg)
                         }
                     }
                     adapter.notifyDataSetChanged()  // Notify the adapter of the data changes
@@ -218,15 +208,41 @@ class SearchFragment : Fragment() {
             }
     }
 
+    private fun setSalarySpinner() {
+        val salarySpinner = binding.salarySpinner
+        ArrayAdapter.createFromResource(
+            binding.root.context,
+            R.array.salary_options,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            salarySpinner.adapter = adapter
+        }
+
+        salarySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                selectedSalary = if (position == 0) "All salaries" else parent.getItemAtPosition(position).toString()
+                loadData()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                selectedSalary = "All salaries"
+
+            }
+        }
+    }
 
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (activity as BottomActivity).hideBottomNavigation()
+    }
 
+    override fun onDetach() {
+        (activity as BottomActivity).showBottomNavigation()
+        super.onDetach()
 
-
-
-
-
-
+    }
 
     companion object {
         /**
@@ -235,12 +251,12 @@ class SearchFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment SearchFragment.
+         * @return A new instance of fragment SearchGirlFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            SearchFragment().apply {
+            SearchGirlFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)
