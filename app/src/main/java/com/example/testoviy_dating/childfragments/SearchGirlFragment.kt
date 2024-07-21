@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.navigation.fragment.findNavController
 import com.example.testoviy_dating.BottomActivity
 import com.example.testoviy_dating.R
 import com.example.testoviy_dating.databinding.FragmentGirlsResponseBinding
@@ -67,6 +68,29 @@ class SearchGirlFragment : Fragment() {
         // Initialize adapter and set it to RecyclerView
         adapter = SearchGirlsAdapter(list2, object : SearchGirlsAdapter.OnItremClickListener {
             override fun onItemClick(malumotlar: BoysReg) {
+
+                val password = (activity as? BottomActivity)?.intent?.getStringExtra("password")
+                firebaseFirestore.collection("girl_reg")
+                    .get()
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            list2.clear()  // Clear the existing list before adding new data
+                            val result = task.result
+                            result?.forEach { queryDocumentSnapshot ->
+                                val girlReg = queryDocumentSnapshot.toObject(GirlsReg::class.java)
+                                if (girlReg.Password == password){
+                                    var bundle = Bundle()
+                                    bundle.putSerializable("userDataGirl",girlReg)
+                                    bundle.putSerializable("boyData",malumotlar)
+                                    findNavController().navigate(R.id.girlsPercentageFragment,bundle)
+
+                                }
+
+                            }
+                            Log.e(TAG, "Error fetching data", task.exception)
+                        }
+                    }
+
 
             }
 

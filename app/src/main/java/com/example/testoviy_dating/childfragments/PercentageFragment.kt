@@ -28,7 +28,6 @@ class PercentageFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -45,41 +44,31 @@ class PercentageFragment : Fragment() {
     ): View? {
         binding = FragmentPercentageBinding.inflate(layoutInflater, container, false)
 
-        val gender = arguments?.getString("gender")
+//        val gender = arguments?.getString("gender")
 
-        if (gender == "Male") {
+
             setStatistics()
 
-        }
 
         return binding.root
     }
 
-
-
-
     //set data about girls matching
-
     private fun setStatistics() {
         val percentage = arguments?.getInt("percentage")
         val boyUserData = arguments?.getSerializable("userDataBoy") as BoysReg
         val girlDataForBoyUser = arguments?.getSerializable("girlData") as GirlsReg
 
-
-
-
         val boyExpectations = boyUserData.BoysExpectation
         val girlResponses = girlDataForBoyUser.GirlsResponse
 
         binding.kettu.setOnClickListener {
-            var bundle = Bundle()
-            bundle.putSerializable("girlExpectations",girlDataForBoyUser.GirlsExpectation)
-            bundle.putSerializable("boyResponse",boyUserData.BoysResponse)
-            findNavController().navigate(R.id.percentageChildFragment,bundle)
+            val bundle = Bundle().apply {
+                putSerializable("girlExpectations", girlDataForBoyUser.GirlsExpectation)
+                putSerializable("boyResponse", boyUserData.BoysResponse)
+            }
+            findNavController().navigate(R.id.percentageChildFragment, bundle)
         }
-
-
-
 
         val questions = listOf(
             "1. Juftingiz qanday bo'lishini hohlaysiz?",
@@ -90,49 +79,6 @@ class PercentageFragment : Fragment() {
             "6. Yuz tuzilishi qanday bo'lishini hohlaysiz?",
             "7. Sizga nisbatan qanday munosabatda bo'lishini hohlaysiz?",
             "8. Asosiy prioritetlari qanday bo'lishini hohlaysiz?"
-        )
-
-        val answerMapping = mapOf(
-            "First" to listOf(
-                "Hijob o'ragan, dinga e'tiqodi baland.",
-                "Dunyoviy, zamonaviy kiyingan.",
-                "Ham diniy, ham dunyoviy."
-            ),
-            "Second" to listOf(
-                "Oliy ma'lumotli.",
-                "O'rta maxsus.",
-                "O'rta maxsus lekin hunarli."
-            ),
-            "Third" to listOf(
-                "Ishlamoqchiman.",
-                "Yo'q, uyda o'tirmoqchiman.",
-                "Oilani iqtisodiy holatiga qarab ishlayman yoki ishlamayman."
-            ),
-            "Fourth" to listOf(
-                "Past(1.50 dan 1.60)",
-                "O'rta (1.60 dan 1.70 gacha).",
-                "Baland (1.70+)."
-            ),
-            "Fifth" to listOf(
-                "Yengil(45kg dan 60kg gacha).",
-                "O'rta vazn(60 kgdan 70 kggacha).",
-                "Og'ir(70+)."
-            ),
-            "Sixth" to listOf(
-                "Oq-sariq, ko'k-yashil ko'zli.",
-                "Qora qosh, qora ko'zli, bug'doy rang.",
-                "Jingalak sochli va o'ziga hos jihatlarga ega."
-            ),
-            "Seventh" to listOf(
-                "Doim qo'llab quvvatlayman, unga ishonanan. Qiyin paytida tashlab ketmayman.",
-                "Meni o'zimni hayotim, o'z prinsiplarim bor. Urush-janjal bo'lib turishi mumkin.",
-                "Vaqtinchalik munosabatlarda bo'lishini. Ma'lum bir muddatdan keyin ajrashib ketamiz."
-            ),
-            "Eighth" to listOf(
-                "Oilam, farzandlarim deydigan qizman.",
-                "Koryerani birinchi o'rinda qo'yaman",
-                "Ham oila va koryerani teng olib keta olaman."
-            )
         )
 
         val wordQuestions = listOf(
@@ -159,12 +105,16 @@ class PercentageFragment : Fragment() {
         val matchedTraits = StringBuilder("Matched Traits:\n")
         val unmatchedTraits = StringBuilder("Unmatched Traits:\n")
 
+        var matchedCount = 0
+        val totalCount = questions.size + wordQuestions.size
+
         questions.forEachIndexed { index, question ->
             val boyAnswer = getAnswerText(boyExpectations, index + 1)
             val girlAnswer = getAnswerText(girlResponses, index + 1)
 
             if (boyAnswer == girlAnswer) {
                 matchedTraits.append("$question\nBoy's Response: $boyAnswer\nGirl's Response: $girlAnswer\n\n")
+                matchedCount++
             } else {
                 unmatchedTraits.append("$question\nBoy's Response: $boyAnswer\nGirl's Response: $girlAnswer\n\n")
             }
@@ -175,14 +125,16 @@ class PercentageFragment : Fragment() {
             val matched = girlWords.any { girlWord -> boyWord == girlWord }
             if (matched) {
                 matchedTraits.append("$question\nBoy's Response: $boyWord\nGirl's Response: Matched\n\n")
+                matchedCount++
             } else {
                 unmatchedTraits.append("$question\nBoy's Response: $boyWord\nGirl's Response: Not Matched\n\n")
             }
         }
 
+        val overallMatchingPercentage = (matchedCount.toDouble() / totalCount) * 100
         binding.matchings.text = "$matchedTraits\n$unmatchedTraits"
+        binding.percentageee.text = "Overall Matching Percentage: ${"%.2f".format(overallMatchingPercentage)}%"
     }
-
 
     private fun getAnswerText(response: GirlsResponse?, questionIndex: Int): String {
         return when (questionIndex) {
@@ -237,8 +189,6 @@ class PercentageFragment : Fragment() {
             else -> ""
         }
     }
-
-
 
     companion object {
         @JvmStatic

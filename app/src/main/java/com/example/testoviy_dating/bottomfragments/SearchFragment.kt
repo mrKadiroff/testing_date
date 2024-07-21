@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.testoviy_dating.BottomActivity
 import com.example.testoviy_dating.R
 import com.example.testoviy_dating.databinding.FragmentSearchBinding
+import com.example.testoviy_dating.models.Registration
 import com.example.testoviy_dating.newadapters.SearchBoysAdapter
 import com.example.testoviy_dating.newreg.BoysReg
 import com.example.testoviy_dating.newreg.GirlsReg
@@ -68,6 +69,32 @@ class SearchFragment : Fragment() {
         adapter = SearchBoysAdapter(list2, object : SearchBoysAdapter.OnItremClickListener {
             override fun onItemClick(malumotlar: GirlsReg) {
                 // Handle item click
+                val password = (activity as? BottomActivity)?.intent?.getStringExtra("password")
+                firebaseFirestore.collection("boy_reg")
+                    .get()
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            list2.clear()  // Clear the existing list before adding new data
+                            val result = task.result
+                            result?.forEach { queryDocumentSnapshot ->
+                                val boyReg = queryDocumentSnapshot.toObject(BoysReg::class.java)
+                                if (boyReg.Password == password){
+                                    var bundle = Bundle()
+                                    bundle.putSerializable("userDataBoy",boyReg)
+                                    bundle.putSerializable("girlData",malumotlar)
+                                    findNavController().navigate(R.id.percentageFragment,bundle)
+
+                                }
+
+                            }
+                            Log.e(TAG, "Error fetching data", task.exception)
+                        }
+                    }
+
+
+
+
+
             }
         })
         binding.rv.adapter = adapter
