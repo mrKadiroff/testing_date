@@ -48,14 +48,21 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.messaging.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    implementation (libs.androidx.navigation.fragment.ktx)
-    implementation (libs.navigation.ui.ktx)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.navigation.ui.ktx)
 
-    implementation (libs.smoothBottomBar)
+    implementation(libs.smoothBottomBar)
 
-    implementation (libs.circleimageview)
+    implementation(libs.circleimageview)
+
+
+
+
 }
+

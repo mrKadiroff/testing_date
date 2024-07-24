@@ -1,11 +1,15 @@
 package com.example.testoviy_dating.childfragments
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
+import com.example.testoviy_dating.BottomActivity
 import com.example.testoviy_dating.R
 import com.example.testoviy_dating.databinding.FragmentPercentageBinding
 import com.example.testoviy_dating.databinding.FragmentRecommendationBinding
@@ -13,6 +17,9 @@ import com.example.testoviy_dating.models.GirlsExpectation
 import com.example.testoviy_dating.models.GirlsResponse
 import com.example.testoviy_dating.newreg.BoysReg
 import com.example.testoviy_dating.newreg.GirlsReg
+import com.example.testoviy_dating.newreg.Invitation
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -37,21 +44,71 @@ class PercentageFragment : Fragment() {
     }
 
     lateinit var binding: FragmentPercentageBinding
+    lateinit var firebaseFirestore: FirebaseFirestore
 
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentPercentageBinding.inflate(layoutInflater, container, false)
-
+        firebaseFirestore = FirebaseFirestore.getInstance()
 //        val gender = arguments?.getString("gender")
 
 
             setStatistics()
+        binding.sendInvitation.setOnClickListener {
+            val boyUserData = arguments?.getSerializable("userDataBoy") as BoysReg
+            val girlDataForBoyUser = arguments?.getSerializable("girlData") as GirlsReg
+            sendInvitation(boyUserData.Password!!,girlDataForBoyUser.Password!!)
+        }
+
+
+
+        binding.gotoChafragment.setOnClickListener {
+
+            val bundle = Bundle().apply {
+                val boyUserData = arguments?.getSerializable("userDataBoy") as BoysReg
+                val girlDataForBoyUser = arguments?.getSerializable("girlData") as GirlsReg
+                putString("senderId", boyUserData.Password!!)
+                putString("receiverId", girlDataForBoyUser.Password!!)
+            }
+
+
+            findNavController().navigate(R.id.chatFragment,bundle)
+        }
 
 
         return binding.root
     }
+
+    private fun sendInvitation(boyPassword: String, girlPassword: String) {
+        // Create the invitation object with default values
+        val invitation = Invitation(boyPassword, girlPassword, "pending", FieldValue.serverTimestamp().toString())
+
+        // Add the invitation to Firestore
+        firebaseFirestore.collection("invitations")
+            .add(invitation)
+            .addOnSuccessListener { documentReference ->
+                // Get the generated documentId
+                val documentId = documentReference.id
+
+                // Update the invitation with the documentId
+                firebaseFirestore.collection("invitations")
+                    .document(documentId)
+                    .update("documentId", documentId)
+                    .addOnSuccessListener {
+                        Toast.makeText(binding.root.context, "Invitation sent with ID: $documentId", Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(binding.root.context, "Failed to update invitation with documentId.", Toast.LENGTH_SHORT).show()
+                    }
+            }
+            .addOnFailureListener {
+                Toast.makeText(binding.root.context, "Failed to send invitation.", Toast.LENGTH_SHORT).show()
+            }
+    }
+
 
     //set data about girls matching
     private fun setStatistics() {
@@ -188,6 +245,23 @@ class PercentageFragment : Fragment() {
             }
             else -> ""
         }
+    }
+
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (activity as BottomActivity).hideBottomNavigation()
+    }
+
+    override fun onDetach() {
+        (activity as BottomActivity).showBottomNavigation()
+        super.onDetach()
+
+    }
+
+    override fun onResume() {
+        (activity as BottomActivity).hideBottomNavigation()
+        super.onResume()
     }
 
     companion object {

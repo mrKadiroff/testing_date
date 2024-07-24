@@ -70,4 +70,13 @@
         android:name="com.example.testoviy_dating.childfragments.SearchGirlFragment"
         android:label="fragment_search_girl"
         tools:layout="@layout/fragment_search_girl" />
+    <fragment
+        android:id="@+id/realTImeTestFragment"
+        android:name="com.example.testoviy_dating.childfragments.RealTImeTestFragment"
+        android:label="fragment_real_t_ime_test"
+        tools:layout="@layout/fragment_real_t_ime_test" />
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.testoviy_dating.thirdFragments.ChatFragment"
+        android:label="ChatFragment" />
 </navigation>
