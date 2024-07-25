@@ -1,6 +1,7 @@
 package com.example.testoviy_dating.bottomfragments
 
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +11,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.example.testoviy_dating.BottomActivity
 import com.example.testoviy_dating.R
 import com.example.testoviy_dating.adapter.RegistrationAdapter
@@ -24,6 +28,8 @@ import com.example.testoviy_dating.newreg.Invitation
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.messaging.FirebaseMessaging
+import org.json.JSONObject
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -60,6 +66,9 @@ class AccountFragment : Fragment() {
 
         val check = (activity as? BottomActivity)?.intent?.getStringExtra("log")
 
+
+        test()
+
         if (check == "registration") {
             val regInformation = (activity as? BottomActivity)?.intent?.getSerializableExtra("reg") as Registration
             binding.questions.setOnClickListener {
@@ -78,6 +87,33 @@ class AccountFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    private fun test() {
+        binding.profileImage.setOnClickListener {
+            FirebaseMessaging.getInstance().token
+                .addOnCompleteListener { task ->
+                    if (!task.isSuccessful) {
+                        Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                        return@addOnCompleteListener
+                    }
+
+                    // Get new FCM registration token
+                    val token = task.result
+
+
+
+
+
+
+
+
+
+                }
+        }
+
+
+
     }
 
     private fun respondToInvitation() {

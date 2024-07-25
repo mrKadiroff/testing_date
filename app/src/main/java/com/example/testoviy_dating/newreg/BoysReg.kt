@@ -12,6 +12,7 @@ class BoysReg : Serializable{
     var Password: String? = null
     var RecoveryAccount: String? = null
     var Region: String? = null
+    var Token: String? = null
     var BoysExpectation: GirlsResponse? = null
     var BoysResponse: GirlsExpectation? = null
 
@@ -30,6 +31,7 @@ class BoysReg : Serializable{
         Password: String?,
         RecoveryAccount: String?,
         Region: String?,
+        Token: String?,
         BoysExpectation: GirlsResponse?,
         BoysResponse: GirlsExpectation?
     ) {
@@ -40,6 +42,7 @@ class BoysReg : Serializable{
         this.Password = Password
         this.RecoveryAccount = RecoveryAccount
         this.Region = Region
+        this.Token = Token
         this.BoysExpectation = BoysExpectation
         this.BoysResponse = BoysResponse
     }

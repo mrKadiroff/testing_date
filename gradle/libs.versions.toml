@@ -17,6 +17,7 @@ smoothbottombar = "1.7.9"
 firebaseFirestore = "25.0.0"
 firebaseMessaging = "24.0.0"
 firebaseMessagingKtx = "24.0.0"
+volley = "1.2.1"
 
 
 [libraries]
@@ -36,6 +37,7 @@ smoothBottomBar = { module = "com.github.ibrahimsn98:SmoothBottomBar", version.r
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
 firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessagingKtx" }
+volley = { module = "com.android.volley:volley", version.ref = "volley" }
 
 
 

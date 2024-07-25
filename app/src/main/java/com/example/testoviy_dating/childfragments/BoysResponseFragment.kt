@@ -1,7 +1,9 @@
 package com.example.testoviy_dating.childfragments
 
+import android.content.ContentValues
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +26,7 @@ import com.example.testoviy_dating.models.Question
 import com.example.testoviy_dating.models.Registration
 import com.example.testoviy_dating.newreg.BoysReg
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -55,6 +58,7 @@ class BoysResponseFragment : Fragment() {
     lateinit var firebaseFirestore: FirebaseFirestore
     private lateinit var traitsAdapter: TraitsAdapter
     private val traitsList = mutableListOf<BoysTraits>()
+    private var tokencha: String? = null
     private val questions = listOf(
         Question("1. Oylik daromadingiz qancha?", listOf(". 2-4 million so'm", "5-9 million so'm.", "10mln +.")),
         Question("2.Yuz tuzilishingiz qanday?", listOf("Oq-sariq yuzli , ko'k-yashil ko'zli", "Qora sochli, qora qoshli, qora ko'zli.", "Jingalak sochli va o'ziga xos xususiyatli.")),
@@ -84,6 +88,19 @@ class BoysResponseFragment : Fragment() {
         binding.nextcha.setOnClickListener {
             Toast.makeText(binding.root.context, regInformation.Password, Toast.LENGTH_SHORT).show()
         }
+
+
+        FirebaseMessaging.getInstance().token
+            .addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w(ContentValues.TAG, "Fetching FCM registration token failed", task.exception)
+                    return@addOnCompleteListener
+                }
+
+                // Get new FCM registration token
+                tokencha = task.result
+
+            }
 
 
 
@@ -154,7 +171,7 @@ class BoysResponseFragment : Fragment() {
 
 
         val boysReg = BoysReg(regInformation.Name,regInformation.Surname,regInformation.Age,regInformation.Gender,regInformation.Password,regInformation.RecoveryAccount,
-            regInformation.Region,boysExpectations,boyResponse)
+            regInformation.Region,tokencha,boysExpectations,boyResponse)
 
         firebaseFirestore.collection("boy_reg")
             .add(boysReg)
